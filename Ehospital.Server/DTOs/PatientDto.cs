@@ -1,4 +1,4 @@
-﻿namespace Ehospital.Server.DTOs
+﻿namespace Ehospital.Server.Dtos
 {
     public class PatientDto
     {

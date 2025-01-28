@@ -1,6 +1,6 @@
-﻿namespace Ehospital.Server.DTOs
+﻿namespace Ehospital.Server.Dtos
 {
-    public class SpecializationDTO
+    public class SpecializationDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

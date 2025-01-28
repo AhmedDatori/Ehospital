@@ -1,6 +1,6 @@
-﻿namespace Ehospital.Server.DTOs
+﻿namespace Ehospital.Server.Dtos
 {
-    public class AppointmentDTO
+    public class AppointmentDto
     {
         public int Id { get; set; }
         public int DoctorID { get; set; }
