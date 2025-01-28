@@ -130,6 +130,23 @@ namespace Ehospital.Server.Services
 
         }
 
-        
+        public async Task<User?> UpdateUserAsync(Guid id,UserDto request)
+        {
+            var user = await context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return null;
+            }
+            if (await context.Users.AnyAsync(u => u.Email == request.Email && u.Id != id))
+            {
+                return null;
+            }
+            user.Email = request.Email;
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.Password);
+
+            await context.SaveChangesAsync();
+            return user;
+
+        }
     }
 }
