@@ -2,8 +2,12 @@
 {
     public class AppointmentDto
     {
-        public int DoctorID { get; set; }
-        public int PatientID { get; set; }
+        public Guid Id { get; set; }
+        public string DoctorName { get; set; }
+        public Guid DoctorID { get; set; }
+        public string SpecialityName { get; set; }
+        public string PatientName { get; set; }
+        public Guid PatientID { get; set; }
         
     }
 }

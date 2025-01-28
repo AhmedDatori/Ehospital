@@ -248,6 +248,13 @@ namespace Ehospital.Server.Controllers
                 return BadRequest("Error deleting the user.");
             }
 
+            // Delete doctor's all appointments
+            var appointmentsToDelete = await context.Appointments.Where(a => a.DoctorID == id).ToListAsync();
+            if (appointmentsToDelete.Count > 0)
+            {
+                context.Appointments.RemoveRange(appointmentsToDelete);
+            }
+
             context.Doctors.Remove(doctorToDelete);
             context.Users.Remove(userToDelete);
             await context.SaveChangesAsync();

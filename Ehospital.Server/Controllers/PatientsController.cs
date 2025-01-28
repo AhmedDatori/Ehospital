@@ -221,6 +221,9 @@ namespace Ehospital.Server.Controllers
             {
                 return Unauthorized("You are not authorized to delete this information.");
             }
+
+            
+
             var patientToDelete = await context.Patients.FindAsync(id);
             if (patientToDelete == null)
             {
@@ -231,6 +234,14 @@ namespace Ehospital.Server.Controllers
             {
                 return BadRequest("Error deleting the user.");
             }
+
+            // Delete patient's all appointments
+            var appointmentsToDelete = await context.Appointments.Where(a => a.PatientID == id).ToListAsync();
+            if (appointmentsToDelete.Count > 0)
+            {
+                context.Appointments.RemoveRange(appointmentsToDelete);
+            }
+
             context.Patients.Remove(patientToDelete);
             context.Users.Remove(userToDelete);
             await context.SaveChangesAsync();
