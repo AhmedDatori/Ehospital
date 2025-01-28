@@ -83,7 +83,7 @@ namespace Ehospital.Server.Controllers
 
 
         [Authorize]
-        [HttpGet("userID/{userId}")]
+        [HttpGet("UserID/{userId}")]
         public async Task<ActionResult<List<AppointmentDto>>> GetAllAppointmentsByUserID(Guid userId)
         {
             var cacheKey = $"Appointments_UserID_{userId}";

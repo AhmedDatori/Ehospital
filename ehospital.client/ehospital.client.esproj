@@ -10,9 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\assets\" />
-    <Folder Include="src\context\" />
-    <Folder Include="src\components\" />
-    <Folder Include="src\pages\admin\" />
+    <Folder Include="src\components\common\" />
+    <Folder Include="src\components\client\" />
     <Folder Include="src\pages\client\" />
   </ItemGroup>
 </Project>

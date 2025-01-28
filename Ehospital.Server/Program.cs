@@ -1,5 +1,6 @@
 using Ehospital.Server.Data;
 using Ehospital.Server.Services;
+using Ehospital.Server.Services.Caching;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,8 +31,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add CORS WILL BE REMOVED LATER Just for easy development
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebApp",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 // Adding Auth Service 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
 // Add Redis Cache Service
 builder.Services.AddStackExchangeRedisCache(options =>
