@@ -44,7 +44,7 @@ namespace Ehospital.Server.Controllers
             return Ok(specialization);
         }
 
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult> AddSpecialization(SpecializationDto newSpecialization)
         {

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets_frontend/assets";
-import { AppContext } from "../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-const MyProfile = () => {
+const ClientProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState({});
   const {
@@ -185,4 +185,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default ClientProfile;

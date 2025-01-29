@@ -1,11 +1,11 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import AdminNavBar from './AdminNavBar';  // Assuming you have an AdminNavBar component
+import ClientNavBar from './ClientNavBar';  // Assuming you have an AdminNavBar component
 
-const AdminLayout = () => {
+const ClientLayout = () => {
     return (
-        <div >
-            <AdminNavBar />
+        <div>
+            <ClientNavBar />
             <main style={{ padding: "1rem" }}>
                 <Outlet />  {/* This will render the matched child route */}
             </main>
@@ -13,4 +13,4 @@ const AdminLayout = () => {
     );
 };
 
-export default AdminLayout;
+export default ClientLayout;

@@ -15,6 +15,31 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add CORS WILL BE REMOVED LATER Just for easy development
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebApp",
+        policy => policy
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
+// Add DbContext 
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+// Add Redis Cache Service
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "EHospitalR_";
+});
+
+
 // Authentications
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -31,32 +56,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Add CORS WILL BE REMOVED LATER Just for easy development
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowWebApp",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-});
+
 
 // Adding Auth Service 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
-// Add Redis Cache Service
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "EHospitalR_";
-});
 
-// Add DbContext 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+
 
 
 var app = builder.Build();
@@ -67,11 +75,14 @@ app.MapStaticAssets();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.MapScalarApiReference();
+    app.MapOpenApi();
 }
 
+
 app.UseHttpsRedirection();
+
+app.UseCors("AllowWebApp");
 
 app.UseAuthorization();
 

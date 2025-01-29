@@ -52,7 +52,7 @@ namespace Ehospital.Server.Controllers
             return Ok(admin);
         }
 
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult> AddAdmin(AdminDto admin)
         {

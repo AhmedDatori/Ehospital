@@ -1,1 +1,28 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/** {
+    font-family: Jost;
+}*/
+
+/* in Admin */
+.active p {
+    @apply bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium;
+}
+
+.active hr {
+    @apply block;
+}
+
+::-webkit-scrollbar {
+    @apply hidden;
+}
+
+@media (max-width: 768px) {
+    .active p {
+        @apply text-white bg-primary;
+    }
+}

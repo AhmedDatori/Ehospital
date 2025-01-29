@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import Doctor from "./Doctor";
 
 const TopDoctors = () => {
@@ -15,11 +15,11 @@ const TopDoctors = () => {
       </p>
       <div className="w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0">
         {doctors.length > 0 ? (
-          doctors.slice(0, 5).map((doctor) => (
-            <Doctor
-              key={doctor.id} // Use doctor.id as the key for better stability
-              doctor={doctor}
-              specName={getSpecialtyName(doctor.specializationID)}
+                  doctors.slice(0,5).map((doctor) => (
+              <Doctor
+                    key={doctor.id}
+                    doctor={doctor}
+                    specName={getSpecialtyName(doctor.specializationID)}
             />
           ))
         ) : (

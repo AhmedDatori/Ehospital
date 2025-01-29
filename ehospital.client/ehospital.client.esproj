@@ -11,7 +11,5 @@
   <ItemGroup>
     <Folder Include="src\assets\" />
     <Folder Include="src\components\common\" />
-    <Folder Include="src\components\client\" />
-    <Folder Include="src\pages\client\" />
   </ItemGroup>
 </Project>

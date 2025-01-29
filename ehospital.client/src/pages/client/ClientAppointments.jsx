@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-import { assets } from "../assets/assets_frontend/assets";
-import RelatedDoctors from "../components/RelatedDoctors";
+import { AppContext } from "../../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import RelatedDoctors from "../../components/client/RelatedDoctors";
 import { toast } from "sonner";
 
-const Appointments = () => {
+const ClientAppointments = () => {
   const { docId } = useParams();
   const {
     doctors,
@@ -117,4 +117,4 @@ const Appointments = () => {
   );
 };
 
-export default Appointments;
+export default ClientAppointments;

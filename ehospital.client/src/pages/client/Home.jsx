@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../components/Header";
-import SpecialityMenu from "../components/SpecialityMenu";
-import TopDoctors from "../components/TopDoctors";
-import Banner from "../components/Banner";
+import Header from "../../components/client/Header";
+import SpecialityMenu from "../../components/client/SpecialityMenu";
+import TopDoctors from "../../components/client/TopDoctors";
+import Banner from "../../components/client/Banner";
 const Home = () => {
   return (
     <div>

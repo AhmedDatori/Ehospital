@@ -14,6 +14,7 @@ export const resetTokens = async (
         if (storedAccessToken) {
             setAccessToken(storedAccessToken);
             const decodedToken = jwtDecode(storedAccessToken);
+            console.log("decodedToken", decodedToken)
             const userData = await fetchUserById(
                 decodedToken.userID,
                 decodedToken.role
@@ -25,6 +26,7 @@ export const resetTokens = async (
         localStorage.setItem("refreshToken", refreshToken);
         setAccessToken(accessToken);
         const decodedToken = jwtDecode(accessToken);
+        console.log("decodedToken", decodedToken)
         const userData = await fetchUserById(
             decodedToken.userID,
             decodedToken.role
@@ -38,6 +40,8 @@ export const getCurrentUser = async (accessToken, curUser, fetchUserById) => {
     if (!accessToken || !curUser?.role || !curUser?.userID) return;
 
     try {
+        console.log("cur", curUser)
+
         const userData = await fetchUserById(curUser.userID, curUser.role);
         return userData;
     } catch (error) {

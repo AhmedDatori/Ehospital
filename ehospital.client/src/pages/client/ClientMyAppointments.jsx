@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets_frontend/assets";
-import { AppContext } from "../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
 
-const MyAppointments = () => {
+const ClientMyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const { accessToken, curUser, getAppointmentsByID, deleteAppointment } =
     useContext(AppContext);
@@ -86,4 +86,4 @@ const MyAppointments = () => {
   );
 };
 
-export default MyAppointments;
+export default ClientMyAppointments;

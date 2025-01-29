@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ehospital.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250128163118_removeEmailsAndPasswords")]
-    partial class removeEmailsAndPasswords
+    [Migration("20250129104414_migration01")]
+    partial class migration01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,11 +85,11 @@ namespace Ehospital.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DoctorID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PatientID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PatientID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -113,8 +113,9 @@ namespace Ehospital.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SpecializationID")
-                        .HasColumnType("int");
+                    b.Property<string>("SpecializationID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");

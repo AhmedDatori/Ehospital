@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { assets } from "../assets/assets_frontend/assets";
+import { assets } from "../../assets/assets_frontend/assets";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 
-function Navbar() {
+function ClientNavBar() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -15,7 +16,6 @@ function Navbar() {
     setAccessToken,
     setCurUser,
     fetchUserById,
-    ADMIN_URL,
   } = useContext(AppContext);
 
   const [isPatient, setIsPatient] = useState(false);
@@ -25,10 +25,6 @@ function Navbar() {
       navigate("/login");
     } else if (curUser) {
       setIsPatient(curUser.role === "patient"); // Check if user is a patient
-      if (curUser.role === "patient") {
-      } else {
-        // navigate(ADMIN_URL);
-      }
     }
   }, [accessToken, curUser, navigate]);
 
@@ -43,7 +39,8 @@ function Navbar() {
 
   // Handle storage changes
   useEffect(() => {
-    const handleStorageChange = () => {
+      const handleStorageChange = () => {
+          console.log("resetTokens")
       resetTokens(
         localStorage.getItem("accessToken"),
         localStorage.getItem("refreshToken"),
@@ -234,4 +231,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default ClientNavBar;

@@ -30,6 +30,7 @@ export const fetchSpecialities = async () => {
 export const fetchDoctors = async () => {
     try {
         const response = await axios.get(`${apiConfig.DOCTORS_URL}`);
+        //console.log(response)
         return response.data;
     } catch (error) {
         toast.error("Failed to fetch doctors");
@@ -39,6 +40,7 @@ export const fetchDoctors = async () => {
 
 // get User
 export const fetchUserById = async (userID, role) => {
+    //console.log("user:", role, userID)
     try {
         const response = await axios.get(
             `${apiConfig.API_URL}/${role}s/UserID/${userID}`

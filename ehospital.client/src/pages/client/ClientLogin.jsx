@@ -1,20 +1,20 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets_frontend/assets";
-import { AppContext } from "../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { toast, Toaster } from "sonner";
 import axios from "axios";
+import { apiConfig } from "../../services/apiConfig";
 
-const Login = () => {
+const ClientLogin = () => {
   const [isLogin, setIsLogin] = useState(false);
   const {
-    BASE_URL,
     accessToken,
     setAccessToken,
     setCurUser,
     createUser,
-    fetchUserById,
   } = useContext(AppContext);
 
   const [PatientFormData, setPatientFormData] = useState({
@@ -64,16 +64,20 @@ const Login = () => {
     try {
       if (!accessToken)
         if (isLogin) {
-          const response = await axios.post(
-            `${BASE_URL}/api/auth/login`,
+            const response = await axios.post(
+                `${apiConfig.LOGIN_URL}`,
             formData
           );
           // console.log(response.data);
           localStorage.setItem("accessToken", response.data.accessToken);
           setAccessToken(response.data.accessToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
-          const user = jwtDecode(response.data.accessToken);
-          setCurUser(user);
+            const user = jwtDecode(response.data.accessToken);
+
+            console.log("user",user)
+
+
+            setCurUser(user);
           toast.success(message);
           navigate("/MyProfile");
         } else {
@@ -247,4 +251,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ClientLogin;

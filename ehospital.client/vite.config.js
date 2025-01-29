@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
-import tailwindcss from '@tailwindcss/vite'
+//import tailwindcss from '@tailwindcss/vite'
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
@@ -40,8 +40,22 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    //colors: {
+    //    primary: "#02c39a",
+    //    secondary: {
+    //        1: "#028090",
+    //        2: "#00a896",
+    //        3: "#f0f3bd",
+    //    },
+    //},
+    //fontFamily: {
+    //    body: ["Nunito"],
+    //},
+    //gridTemplateColumns: {
+    //    auto: "repeat(auto-fill, minmax(230px, 1fr))",
+    //},
     plugins: [
-        tailwindcss(),
+        //tailwindcss(),
     ],
     resolve: {
         alias: {

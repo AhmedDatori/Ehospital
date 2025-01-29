@@ -29,6 +29,7 @@ const AppContextProvider = ({ children }) => {
     // Fetch user data by ID and role
     const fetchUserById = useCallback(async (userID, role) => {
         try {
+            //console.log("userRole",role)
             const userData = await apiService.fetchUserById(userID, role);
             return userData;
         } catch (error) {
@@ -44,9 +45,10 @@ const AppContextProvider = ({ children }) => {
             if (token) {
                 try {
                     const decodedToken = jwtDecode(token);
+                    //console.log("userRole", decodedToken)
                     const userData = await fetchUserById(
                         decodedToken.userID,
-                        decodedToken.role
+                        decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
                     );
                     if (userData !== curUser) {
                         setCurUser(userData);

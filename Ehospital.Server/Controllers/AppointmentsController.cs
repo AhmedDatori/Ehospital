@@ -28,7 +28,7 @@ namespace Ehospital.Server.Controllers
 
             var query = from appointment in context.Appointments
                         join doctor in context.Doctors on appointment.DoctorID equals doctor.Id
-                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id
+                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id.ToString()
                         join patient in context.Patients on appointment.PatientID equals patient.Id
                         select new AppointmentDto
                         {
@@ -60,7 +60,7 @@ namespace Ehospital.Server.Controllers
             var appointmentQuery = from appointment in context.Appointments
                                    where appointment.Id == id
                                    join doctor in context.Doctors on appointment.DoctorID equals doctor.Id
-                                   join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id
+                                   join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id.ToString()
                                    join patient in context.Patients on appointment.PatientID equals patient.Id
                                    select new AppointmentDto
                                    {
@@ -95,7 +95,7 @@ namespace Ehospital.Server.Controllers
 
             var query = from appointment in context.Appointments
                         join doctor in context.Doctors on appointment.DoctorID equals doctor.Id
-                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id
+                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id.ToString()
                         join patient in context.Patients on appointment.PatientID equals patient.Id
                         where (doctor.UserID == userId || patient.UserID == userId)
                         select new AppointmentDto

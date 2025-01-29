@@ -40,9 +40,10 @@ namespace Ehospital.Server.Controllers
                 foreach (var d in doctorssData)
                 {
                     var user = await context.Users.FindAsync(d.UserID);
-                    var Dspecialization = await context.Specializations.FindAsync(d.SpecializationID);
+                    var Dspecialization = await context.Specializations.FirstOrDefaultAsync(spec=> spec.Id.ToString()== d.SpecializationID);
                     doctors.Add(new DoctorDto
                     {
+                        Id = d.Id,
                         FirstName = d.FirstName,
                         LastName = d.LastName,
                         Email = user?.Email?.ToString(),
@@ -75,10 +76,11 @@ namespace Ehospital.Server.Controllers
                     {
                         Doctor = d,
                         User = context.Users.FirstOrDefault(u => u.Id == d.UserID),
-                        Specialization = context.Specializations.FirstOrDefault(s => s.Id == d.SpecializationID)
+                        Specialization = context.Specializations.FirstOrDefault(s => s.Id.ToString() == d.SpecializationID)
                     })
                     .Select(data => new DoctorDto
                     {
+                        Id = data.Doctor.Id,
                         FirstName = data.Doctor.FirstName,
                         LastName = data.Doctor.LastName,
                         Email = data.User.Email,
@@ -113,10 +115,11 @@ namespace Ehospital.Server.Controllers
                     .Select(d => new {
                         Doctor = d,
                         User = context.Users.FirstOrDefault(u => u.Id == d.UserID),
-                        Specialization = context.Specializations.FirstOrDefault(s => s.Id == d.SpecializationID)
+                        Specialization = context.Specializations.FirstOrDefault(s => s.Id.ToString() == d.SpecializationID)
                     })
                     .Select(data => new DoctorDto
                     {
+                        Id = data.Doctor.Id,
                         FirstName = data.Doctor.FirstName,
                         LastName = data.Doctor.LastName,
                         Email = data.User.Email,
@@ -137,7 +140,7 @@ namespace Ehospital.Server.Controllers
         }
 
 
-        [Authorize(Roles= "admin")]
+        //[Authorize(Roles= "admin")]
         [HttpPost]
         public async Task<ActionResult> AddDoctor(DoctorDto doctorDto)
         {
@@ -166,7 +169,7 @@ namespace Ehospital.Server.Controllers
                 FirstName = doctorDto.FirstName,
                 LastName = doctorDto.LastName,
                 UserID = user.Id,
-                SpecializationID = specialization.Id,
+                SpecializationID = specialization.Id.ToString(),
                 Birthdate = doctorDto.Birthdate
             };
 
@@ -176,6 +179,7 @@ namespace Ehospital.Server.Controllers
 
             return Ok(new DoctorDto
             {
+                Id= newDoctor.Id,
                 FirstName = newDoctor.FirstName,
                 LastName = newDoctor.LastName,
                 Email = user.Email,
@@ -217,13 +221,14 @@ namespace Ehospital.Server.Controllers
             doctorToUpdate.FirstName = doctorDto.FirstName;
             doctorToUpdate.LastName = doctorDto.LastName;
             doctorToUpdate.Birthdate = doctorDto.Birthdate;
-            doctorToUpdate.SpecializationID = specialization.Id;
+            doctorToUpdate.SpecializationID = specialization.Id.ToString();
             await context.SaveChangesAsync();
 
             cache.DeleteData($"doctor_id_{id}");
 
             return Ok(new DoctorDto
             {
+                Id = doctorToUpdate.Id,
                 FirstName = doctorToUpdate.FirstName,
                 LastName = doctorToUpdate.LastName,
                 Email = doctorDto.Email,

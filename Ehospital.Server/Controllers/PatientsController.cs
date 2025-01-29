@@ -45,6 +45,7 @@ namespace Ehospital.Server.Controllers
                     var user = await context.Users.FindAsync(p.UserID);
                     patients.Add(new PatientDto
                     {
+                        Id = p.Id,
                         FirstName = p.FirstName,
                         LastName = p.LastName,
                         Email = user?.Email?.ToString(),
@@ -60,7 +61,7 @@ namespace Ehospital.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("UserID/{UserID}")]
+        [HttpGet("UserID/{userID}")]
         public async Task<ActionResult> GetPatientByUserID(Guid userID)
         {
             var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
@@ -86,6 +87,7 @@ namespace Ehospital.Server.Controllers
                         u => u.Id,
                         (p, u) => new PatientDto
                         {
+                            Id = p.Id,
                             FirstName = p.FirstName,
                             LastName = p.LastName,
                             Email = u.Email,
@@ -125,6 +127,7 @@ namespace Ehospital.Server.Controllers
                         u => u.Id,
                         (p, u) => new PatientDto
                         {
+                            Id = p.Id,
                             FirstName = p.FirstName,
                             LastName = p.LastName,
                             Email = u.Email,
