@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets_frontend/assets";
 
-function Doctor({ doctor, specName }) {
+function Doctor({ doctor }) {
   // Properly destructure props
   const navigate = useNavigate(); // Use the navigate hook here if needed
 
@@ -16,7 +16,7 @@ function Doctor({ doctor, specName }) {
         <p className="text-lg text-gray-900 font-medium">
           Dr. {doctor.firstName} {doctor.lastName}
         </p>
-        <p className="text-gray-600 text-sm">{specName}</p>
+              <p className="text-gray-600 text-sm">{doctor.specialization}</p>
       </div>
     </div>
   );

@@ -14,7 +14,8 @@ const ClientLogin = () => {
     accessToken,
     setAccessToken,
     setCurUser,
-    createUser,
+      createUser,
+      userLogin,
   } = useContext(AppContext);
 
   const [PatientFormData, setPatientFormData] = useState({
@@ -56,43 +57,31 @@ const ClientLogin = () => {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const formData = isLogin ? LoginFormData : PatientFormData;
-    const message = isLogin ? "Logged in" : "Account Created";
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const formData = isLogin ? LoginFormData : PatientFormData;
 
-    try {
-      if (!accessToken)
-        if (isLogin) {
-            const response = await axios.post(
-                `${apiConfig.LOGIN_URL}`,
-            formData
-          );
-          // console.log(response.data);
-          localStorage.setItem("accessToken", response.data.accessToken);
-          setAccessToken(response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
-            const user = jwtDecode(response.data.accessToken);
+        try {
+            if (!accessToken) {
+                if (isLogin) {
+                    const response = await userLogin(formData);
+                    console.log("Response:", response);
+                    if (response) {
+                        setIsLogin(false);
+                        navigate("/MyProfile");
+                    }
+                } else {
+                    await createUser(formData, "patient");
+                    setIsLogin(true);
 
-            console.log("user",user)
-
-
-            setCurUser(user);
-          toast.success(message);
-          navigate("/MyProfile");
-        } else {
-          await createUser(formData, "patient");
-          setIsLogin(true);
-          toast.success(message);
+                }
+            }
+        } catch (error) {
+            
+            toast.error("Error creating account");
+            
         }
-    } catch (error) {
-      if (isLogin) {
-        toast.error("Invalid email or password");
-      } else {
-        toast.error("Error creating account");
-      }
     }
-  }
 
   return (
     <>

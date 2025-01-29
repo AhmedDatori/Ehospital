@@ -9,36 +9,13 @@ const ClientAppointments = () => {
   const { docId } = useParams();
   const {
     doctors,
-    getSpecialtyName,
-    getCurrentUser,
     createAppointment,
-    accessToken,
+    curUser,
   } = useContext(AppContext);
   const [docInfo, setDocInfo] = useState(null);
-  const [currentPatient, setCurrentPatient] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // get the current patient data
-  useEffect(() => {
-    const fetchCurrentPatient = async () => {
-      if (!accessToken) {
-        navigate("/login");
-        return;
-      }
-
-      try {
-        const currentPatientData = await getCurrentUser();
-        setCurrentPatient(currentPatientData);
-      } catch (error) {
-        console.error("Failed to fetch patient data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCurrentPatient();
-  }, [accessToken, getCurrentUser, navigate]);
 
   // get the doctor information
   useEffect(() => {
@@ -47,25 +24,29 @@ const ClientAppointments = () => {
       if (doctor) {
         setDocInfo(doctor);
       } else {
-        setError("Doctor not found.");
+          console.error("Doctor not found.");
       }
-    }
+      }
+      setLoading(false);
   }, [doctors, docId]);
 
   // book appointment button
   const handleBookAppointment = async () => {
-    if (!currentPatient || !docId) {
-      setError("Patient or doctor information is missing.");
+      if (!curUser || !docId) {
+          //console.log(currentPatient, docId, curUser)
+          console.error("Patient or doctor information is missing.");
+          setLoading(false);
       return;
     }
 
     try {
-      await createAppointment(docId, currentPatient.id);
-      toast.success("Appointment booked successfully.");
+        await createAppointment(docId, curUser.id);
+        navigate("/myAppointments");
     } catch (error) {
-      console.error("Failed to book appointment:", error);
-      toast.error("Failed to book appointment. Please try again.");
-    }
+      //console.error("Failed to book appointment:", error);
+      //toast.error("Failed to book appointment. Please try again.");
+      }
+      setLoading(false);
   };
 
   if (loading) {
@@ -94,7 +75,7 @@ const ClientAppointments = () => {
               <img className="w-5" src={assets.verified_icon} alt="Verified" />
             </p>
             <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-              <p>MBBS {getSpecialtyName(docInfo.specializationID)}</p>
+                          <p>MBBS {docInfo.specialization}</p>
               <button className="py-0.5 px-2 border text-xs rounded-full">
                 4 years
               </button>

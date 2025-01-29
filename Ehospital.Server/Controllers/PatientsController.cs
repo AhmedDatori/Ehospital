@@ -49,6 +49,7 @@ namespace Ehospital.Server.Controllers
                         FirstName = p.FirstName,
                         LastName = p.LastName,
                         Email = user?.Email?.ToString(),
+                        Password = null,
                         RegisterDate = p.RegisterDate,
                         Birthdate = p.Birthdate
                     });
@@ -91,6 +92,7 @@ namespace Ehospital.Server.Controllers
                             FirstName = p.FirstName,
                             LastName = p.LastName,
                             Email = u.Email,
+                            Password = null,
                             RegisterDate = p.RegisterDate,
                             Birthdate = p.Birthdate
                         })
@@ -131,6 +133,7 @@ namespace Ehospital.Server.Controllers
                             FirstName = p.FirstName,
                             LastName = p.LastName,
                             Email = u.Email,
+                            Password = null,
                             RegisterDate = p.RegisterDate,
                             Birthdate = p.Birthdate
                         })
@@ -181,15 +184,17 @@ namespace Ehospital.Server.Controllers
         {
             var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
             var currentUserID = HttpContext.User.FindFirstValue("userID");
-            // Allow only admins, doctors and the patient himself to update
-            if (currentUserRole == "patient" && currentUserID != id.ToString())
-            {
-                return Unauthorized("You are not authorized to update this information.");
-            }
+
             var patientToUpdate = await context.Patients.FindAsync(id);
             if (patientToUpdate == null)
             {
                 return NotFound("Patient not found.");
+            }
+
+            // Allow only admins, doctors and the patient himself to update
+            if (currentUserRole == "patient" && currentUserID != patientToUpdate.UserID.ToString())
+            {
+                return Unauthorized("You are not authorized to update this information.");
             }
             var userToUpdate = await authService.UpdateUserAsync(patientToUpdate.UserID, new UserDto
             {
@@ -207,10 +212,20 @@ namespace Ehospital.Server.Controllers
             patientToUpdate.Birthdate = patient.Birthdate;
             await context.SaveChangesAsync();
 
+            var p = new PatientDto
+            {
+                Id = patientToUpdate.Id,
+                FirstName = patientToUpdate.FirstName,
+                LastName = patientToUpdate.LastName,
+                Birthdate = patientToUpdate.Birthdate,
+                Email = userToUpdate.Email,
+                Password = null,
+                RegisterDate = patient.RegisterDate
+            };
             // Delete cache
             cache.DeleteData($"patient_id_{id}");
 
-            return Ok(patientToUpdate);
+            return Ok(p);
         }
 
         [Authorize]

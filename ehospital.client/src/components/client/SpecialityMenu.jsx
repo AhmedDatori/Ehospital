@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+
 import { AppContext } from "../../context/AppContext";
 const SpecialityMenu = () => {
   const { specialities } = useContext(AppContext);
@@ -19,12 +19,12 @@ const SpecialityMenu = () => {
         {specialities.map((item, index) => (
           <Link
             onClick={() => scrollTo(0, 0)}
-            to={`/doctors/${item.specialization}`}
+            to={`/doctors/${item.name}`}
             className="flex flex-col items-center  cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-300"
             key={index}
           >
             <div className="bg-primary text-center shadow-md rounded-full mb-2 flex items-center justify-center w-40 h-40 hover:bg-secondary text-white ">
-              <p className="text-white ">{item.specialization}</p>
+                    <p className="text-white ">{item.name}</p>
             </div>
           </Link>
         ))}

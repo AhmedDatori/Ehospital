@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import axios from "axios";
 import { toast } from "sonner";
@@ -114,11 +115,13 @@ export const deleteUser = async (userID, userRole) => {
 // Update a User
 export const updateUser = async (userID, userRole, userData) => {
     try {
+
         const response = await axios.put(
             `${apiConfig.API_URL}/${userRole}s/${userID}`,
             userData
         );
-        // toast.success("User updated successfully");
+        toast.success("User updated successfully");
+        console.log(response.data)
         return response.data;
     } catch (error) {
         toast.error("Failed to update user");
@@ -126,6 +129,19 @@ export const updateUser = async (userID, userRole, userData) => {
         throw error;
     }
 };
+
+export const userLogin = async (loginData) => {
+    try {
+        const response = await axios.post(
+            `${apiConfig.LOGIN_URL}`,
+            loginData);
+        toast.success("Logged in successfully");
+        return response;
+    } catch (error) {
+        toast.error("Failed to login");
+        return null;
+    }
+}
 
 // get a single patient by ID
 export const getPatient = async (patientID) => {
@@ -184,6 +200,7 @@ export const getAppointmentsByID = async (userID) => {
         const response = await axios.get(
             `${apiConfig.APPOINTMENTS_URL}/UserID/${userID}`
         );
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error("Error fetching appointments:", error);

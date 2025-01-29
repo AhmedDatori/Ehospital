@@ -51,6 +51,7 @@ const AppContextProvider = ({ children }) => {
                         decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
                     );
                     if (userData !== curUser) {
+                        userData.userID = decodedToken.userID
                         setCurUser(userData);
                     }
                 } catch (error) {
@@ -229,26 +230,14 @@ const AppContextProvider = ({ children }) => {
 
     // Fetch appointments by userID
     const getAppointmentsByID = useCallback(async (userID, userRole) => {
-        try {
-            const appointmentsData = await apiService.getAppointmentsByID(
-                userID,
-                userRole
-            );
-            appointmentsData.map(async (appointment) => {
-                appointment.doctor = await getDoctor(appointment.doctorID);
-                appointment.doctorName =
-                    appointment.doctor.firstName + " " + appointment.doctor.lastName;
-                appointment.Patient = await getPatient(appointment.patientsID);
-                appointment.patientName =
-                    appointment.Patient.firstName + " " + appointment.Patient.lastName;
-                appointment.specialtyName = appointment.doctor.specialty.specialization;
-                return appointment;
-            });
-            return appointmentsData;
-        } catch (error) {
-            console.error("Error fetching appointments:", error);
-            throw error;
-        }
+
+        const appointmentsData = await apiService.getAppointmentsByID(
+            userID,
+            userRole
+        );
+
+        return appointmentsData;
+
     }, []);
 
     // Fetch all appointments
@@ -273,6 +262,25 @@ const AppContextProvider = ({ children }) => {
         }
     }, []);
 
+    // User Login
+    const handleUserLogin = useCallback(async (formData) => {
+        console.log(formData)
+        const response = await apiService.userLogin(formData);
+        console.log(response.data)
+        if (response) {
+            localStorage.setItem("accessToken", response.data.accessToken);
+            setAccessToken(response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            const user = jwtDecode(response.data.accessToken);
+            setCurUser(user);
+
+            handleGetCurrentUser();
+            return user;
+        }   
+
+    }, []);
+
+
     // Memoized Context Value
     const contextValue = useMemo(
         () => ({
@@ -281,6 +289,7 @@ const AppContextProvider = ({ children }) => {
             curUser,
             resetTokens: handleResetTokens,
             getCurrentUser: handleGetCurrentUser,
+            userLogin: handleUserLogin,
             fetchUserById,
             setAccessToken,
             setCurUser,

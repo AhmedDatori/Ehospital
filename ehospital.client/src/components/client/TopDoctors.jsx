@@ -4,7 +4,7 @@ import { AppContext } from "../../context/AppContext";
 import Doctor from "./Doctor";
 
 const TopDoctors = () => {
-  const { doctors, getSpecialtyName } = useContext(AppContext);
+  const { doctors } = useContext(AppContext);
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,6 @@ const TopDoctors = () => {
               <Doctor
                     key={doctor.id}
                     doctor={doctor}
-                    specName={getSpecialtyName(doctor.specializationID)}
             />
           ))
         ) : (

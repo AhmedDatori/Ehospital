@@ -33,6 +33,7 @@ function App() {
                     <Route path="/login" element={<ClientLogin />} />
                     <Route path="/MyProfile" element={<ClientProfile />} />
                     <Route path="/doctors" element={<ClientDoctors />} />
+                    <Route path="/doctors/:speciality" element={<ClientDoctors />} />
                     <Route path="/Appointments/:docId" element={<ClientAppointments />} />
                     <Route path="/Appointments/" element={<ClientAppointments />} />
                     <Route path="/MyAppointments" element={<ClientMyAppointments />} />

@@ -5,7 +5,7 @@ import Doctor from "../../components/client/Doctor";
 
 const ClientDoctors = () => {
   const { speciality } = useParams();
-  const { doctors, specialities, getSpecialtyName } = useContext(AppContext);
+  const { doctors, specialities } = useContext(AppContext);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const ClientDoctors = () => {
     if (speciality) {
       setFilteredDoctors(
         doctors.filter(
-          (doc) => getSpecialtyName(doc.specializationID) === speciality
+            (doc) => doc.specialization == speciality
         )
       );
     } else {
@@ -44,17 +44,17 @@ const ClientDoctors = () => {
             <div
               key={spec.id}
               onClick={() => {
-                speciality === spec.specialization
+                  speciality === spec.name
                   ? navigate(`/doctors`)
-                  : navigate(`/doctors/${spec.specialization}`);
+                  : navigate(`/doctors/${spec.name}`);
               }}
-              className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-20 border border-gray-300 rounded transition-all cursor-pointer hover:bg-slate-200 ${
-                speciality === spec.specialization
+                  className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-20 border border-gray-300 rounded transition-all cursor-pointer hover:bg-slate-200 
+                  ${speciality === spec.name
                   ? "bg-primary text-white hover:bg-primary"
                   : ""
               } ${showFilter ? "flex" : "hidden sm:flex"}`}
             >
-              {spec.specialization}
+             {spec.name}
             </div>
           ))}
         </div>
@@ -63,7 +63,6 @@ const ClientDoctors = () => {
             <Doctor
               key={index}
               doctor={doctor}
-              specName={getSpecialtyName(doctor.specializationID)} // Ensuring correct prop names
             />
           ))}
         </div>

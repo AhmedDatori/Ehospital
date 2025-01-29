@@ -142,7 +142,8 @@ namespace Ehospital.Server.Services
                 return null;
             }
             user.Email = request.Email;
-            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.Password);
+            if (request.Password != null)
+                user.PasswordHash = new PasswordHasher<User>().HashPassword(user, request.Password);
 
             await context.SaveChangesAsync();
             return user;

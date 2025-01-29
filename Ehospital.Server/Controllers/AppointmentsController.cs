@@ -7,6 +7,7 @@ using Ehospital.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Ehospital.Server.Dtos;
+using Ehospital.Server.Entities;
 
 namespace Ehospital.Server.Controllers
 {
@@ -120,14 +121,21 @@ namespace Ehospital.Server.Controllers
         public async Task<ActionResult> DeleteAppointment(Guid id)
         {
             var appointment = await context.Appointments.FindAsync(id);
+
             if (appointment == null)
             {
                 return NotFound(new { Message = "Appointment not found." });
             }
+            var doctor = await context.Doctors.FirstOrDefaultAsync(d => d.Id == appointment.DoctorID);
+            var patient = await context.Patients.FirstOrDefaultAsync(p => p.Id == appointment.PatientID);
+
+            
 
             context.Appointments.Remove(appointment);
             await context.SaveChangesAsync();
 ;
+            cache.DeleteData($"Appointments_UserID_{doctor.UserID}");
+            cache.DeleteData($"Appointments_UserID_{patient.UserID}");
 
             return Ok(new { Message = "Appointment deleted successfully." });
         }
@@ -141,17 +149,26 @@ namespace Ehospital.Server.Controllers
                 return BadRequest(new { Message = "Invalid appointment data." });
             }
 
-            var doctor = await context.Doctors.AnyAsync(d => d.Id == newAppointment.DoctorID);
-            var patient = await context.Patients.AnyAsync(p => p.Id == newAppointment.PatientID);
-            if (!doctor || !patient)
+            var doctor = await context.Doctors.FirstOrDefaultAsync(d => d.Id == newAppointment.DoctorID);
+            var patient = await context.Patients.FirstOrDefaultAsync(p => p.Id == newAppointment.PatientID);
+            
+
+            if (doctor == null || patient == null)
             {
                 return BadRequest(new { Message = "Doctor or patient not found." });
             }
+
+            var appointmentsB = await context.Appointments.AnyAsync(a => a.DoctorID == newAppointment.DoctorID && a.PatientID == newAppointment.PatientID);
+            if (appointmentsB) return BadRequest("you already have an appointment with the same doctor");
 
             // Add to the database
             context.Appointments.Add(newAppointment);
             
             await context.SaveChangesAsync();
+
+            cache.DeleteData($"Appointments_UserID_{doctor.UserID}");
+            cache.DeleteData($"Appointments_UserID_{patient.UserID}");
+
 
             return CreatedAtAction(nameof(GetAppointmentById), new { id = newAppointment.Id }, newAppointment);
         }

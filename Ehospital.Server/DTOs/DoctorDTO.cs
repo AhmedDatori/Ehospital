@@ -8,6 +8,6 @@
         public string Email { get; set; }
         public string? Password { get; set; }
         public string Specialization { get; set; }
-        public DateTime Birthdate { get; set; }
+        public DateOnly Birthdate { get; set; }
     }
 }

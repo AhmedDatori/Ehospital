@@ -8,7 +8,7 @@
         public string LastName { get; set; }
         //public string Email { get; set; }
         //public string PasswordHash { get; set; }
-        public DateTime RegisterDate { get; set; }
-        public DateTime Birthdate { get; set; }
+        public DateOnly RegisterDate { get; set; }
+        public DateOnly Birthdate { get; set; }
     }
 }

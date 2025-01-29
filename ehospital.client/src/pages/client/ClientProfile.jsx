@@ -13,26 +13,30 @@ const ClientProfile = () => {
     fetchUserById,
     updateUser,
     deleteUser,
-    BASE_URL,
   } = useContext(AppContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (accessToken && curUser?.userID && curUser?.role) {
+    useEffect(() => {
+        let isMounted = true;
+
+      const fetchUserData = async () => {
+          //console.log(accessToken, curUser)
+      if (accessToken && curUser) {
         try {
-          // console.log("Fetching user data...", curUser);
-          const userData = await fetchUserById(curUser.userID, curUser.role);
-          if (userData) {
-            setUser({
-              id: userData.id,
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              email: userData.email,
-              password: userData.password,
-              birthdate: userData.birthdate,
-              registerDate: userData.registerDate,
-            });
+           //console.log("Fetching user data...", curUser);
+            const userData = await fetchUserById(curUser?.userID, curUser?.role);
+            if (userData && isMounted) {
+                //console.log(userData)
+                setUser({
+                    id: userData.id,
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    email: userData.email,
+                    birthdate: userData.birthdate,
+                    passwprd: null,
+                    registerDate: userData.registerDate,
+                });
+            
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -40,12 +44,14 @@ const ClientProfile = () => {
         }
       } else {
         toast.error("You are not logged in. Please log in and try again.");
-        navigate("/login");
+        //navigate("/login");
       }
     };
 
-    fetchUserData();
-  }, [accessToken, curUser?.userID, curUser?.role, fetchUserById, navigate]);
+      fetchUserData();
+
+      return () => { isMounted = false; };
+  }, [accessToken, curUser]);
 
   // when input changes
   const handleInputChange = (e) => {
@@ -67,10 +73,10 @@ const ClientProfile = () => {
     }
 
     try {
-      const updatedUser = await updateUser(user.id, curUser.role, user);
+        const updatedUser = await updateUser(user.id, curUser.role, user);
+        //console.log("updated user", updatedUser)
       setUser(updatedUser);
       setIsEdit(false);
-      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating account:", error);
       toast.error("Error updating account. Please try again.");

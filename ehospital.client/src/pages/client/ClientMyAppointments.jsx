@@ -11,24 +11,21 @@ const ClientMyAppointments = () => {
     const fetchAppointments = async () => {
       // console.log("Fetching appointments...");
       if (accessToken && curUser) {
-        // console.log("Fetching appointments for user:", curUser);
-        try {
+
           const fetchedAppointments = await getAppointmentsByID(
-            curUser.id,
-            curUser.role
+              curUser.userID,
+              curUser.role
           );
           setAppointments(fetchedAppointments || []);
-          // console.log("Appointments:", fetchedAppointments);
-        } catch (error) {
-          console.error("Failed to fetch appointments:", error);
-        }
+        
       }
     };
 
     fetchAppointments();
   }, [accessToken, curUser, getAppointmentsByID]);
 
-  const handleDeleteAppointment = async (appointmentId) => {
+    const handleDeleteAppointment = async (appointmentId) => {
+
     // update the UI
     const updatedAppointments = appointments.filter(
       (appointment) => appointment.id !== appointmentId
@@ -63,7 +60,7 @@ const ClientMyAppointments = () => {
                     Dr. {appointment.doctorName}
                   </p>
                   <p className="text-lg font-semibold ml-4 max-md:text-xl">
-                    {appointment.specialtyName}
+                                {appointment.specialityName}
                   </p>
                 </div>
               </div>
