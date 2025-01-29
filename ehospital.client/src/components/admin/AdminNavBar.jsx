@@ -161,7 +161,7 @@ function AdminNavBar() {
                                                                 onClick={() => {
                                                                     if (item.name == "Sign out") {
                                                                         localStorage.clear();
-                                                                        navigate("/login");
+                                                                        navigate("/dashboard/login");
                                                                     }
                                                                 }}
                                                             >
@@ -240,7 +240,7 @@ function AdminNavBar() {
                                                 onClick={() => {
                                                     if (item.name == "Sign out") {
                                                         localStorage.clear();
-                                                        navigate("/login");
+                                                        navigate("/Dashboard/login");
                                                     }
                                                 }}
                                                 href={item.href}

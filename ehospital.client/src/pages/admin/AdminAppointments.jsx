@@ -1,10 +1,10 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets_frontend/assets";
-import { AppContext } from "../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-const Appointments = () => {
+const AdminAppointments = () => {
   const {
     getAllAppointments,
     getAppointmentsByID,
@@ -142,4 +142,4 @@ const Appointments = () => {
   );
 };
 
-export default Appointments;
+export default AdminAppointments;

@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets_frontend/assets";
-import { AppContext } from "../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +34,7 @@ const MyProfile = () => {
         }
       } else {
         toast.error("You are not logged in. Please log in and try again.");
-        // navigate("/login");
+        // navigate("/dashboard/login");
       }
     };
 
@@ -55,7 +56,7 @@ const MyProfile = () => {
 
     if (!accessToken || !curUser) {
       toast.error("You are not logged in. Please log in and try again.");
-      navigate("/login");
+        navigate("/dashboard/login");
       return;
     }
 
@@ -73,13 +74,13 @@ const MyProfile = () => {
   const handleDeleteAccount = async () => {
     if (!accessToken || !curUser) {
       toast.error("You are not logged in. Please log in and try again.");
-      navigate("/login");
+        navigate("/dashboard/login");
       return;
     }
 
     try {
       await deleteUser(user.id, curUser.role);
-      navigate("/login");
+        navigate("/dashboard/login");
     } catch (error) {
       console.error("Error deleting account:", error);
       toast.error("Error deleting account. Please try again.");

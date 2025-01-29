@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { Button, Select, Option } from "@material-tailwind/react";
 import { toast } from "sonner";
-import { assets } from "../../../EHospital-Front/src/assets/assets_frontend/assets";
+import { assets } from "../../assets/assets_frontend/assets";
 import { useNavigate } from "react-router-dom";
 
 const DoctorModal = ({

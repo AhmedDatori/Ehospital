@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-import { assets } from "../assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
 
 const Patients = () => {
   const {

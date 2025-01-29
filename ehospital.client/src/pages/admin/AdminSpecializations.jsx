@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/20/solid";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-const Specializations = () => {
+const AdminSpecializations = () => {
   const {
     specialities,
     addSpecialization,
@@ -180,4 +180,4 @@ const Specializations = () => {
   );
 };
 
-export default Specializations;
+export default AdminSpecializations;

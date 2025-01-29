@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-import { assets } from "../../../EHospital-Front/src/assets/assets_frontend/assets";
+import { AppContext } from "../../context/AppContext";
+import { assets } from "../../assets/assets_frontend/assets";
 import { toast } from "sonner";
 
-const Patient = () => {
+const AdminPatient = () => {
   const { patientID } = useParams();
   const navigate = useNavigate();
   const {
@@ -12,14 +12,12 @@ const Patient = () => {
     getAppointmentsByID,
     deleteAppointment,
     deleteUser,
-    curUser,
     accessToken,
   } = useContext(AppContext);
 
   const [patient, setPatient] = useState(null);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // Fetch patient data
   useEffect(() => {
@@ -29,12 +27,9 @@ const Patient = () => {
 
         if (patientData) {
           setPatient(patientData);
-        } else {
-          setError("Patient not found");
-        }
+        } 
       } catch (error) {
         console.error("Error fetching patient data:", error);
-        setError("Failed to fetch patient data");
       } finally {
         setLoading(false);
       }
@@ -54,12 +49,9 @@ const Patient = () => {
           );
           if (Array.isArray(appointmentsData)) {
             setAppointments(appointmentsData);
-          } else {
-            setError("Invalid appointments data");
           }
         } catch (error) {
           console.error("Error fetching appointments:", error);
-          setError("Failed to fetch appointments");
         }
       }
     };
@@ -190,4 +182,4 @@ const Patient = () => {
   );
 };
 
-export default Patient;
+export default AdminPatient;

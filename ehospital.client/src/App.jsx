@@ -14,6 +14,12 @@ import ClientMyAppointments from "./pages/client/ClientMyAppointments";
 import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
+import AdminAppointments from "./pages/admin/AdminAppointments";
+import AdminDoctors from "./pages/admin/AdminDoctors";
+import AdminMyProfile from "./pages/admin/AdminMyProfile";
+import AdminSpecializations from "./pages/admin/AdminSpecializations";
+import AdminPatient from "./pages/admin/AdminPatient";
+
 
 // axios config
 import setupAxiosInterceptors from "./services/axiosConfig"
@@ -27,6 +33,11 @@ function App() {
                 <Route path="/dashboard" element={<AdminLayout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/dashboard/login" element={<AdminLogin />} />
+                    <Route path="/dashboard/Appointments" element={<AdminAppointments />} />
+                    <Route path="/dashboard/MyProfile" element={<AdminMyProfile />} />
+                    <Route path="/dashboard/Appointments" element={<AdminDoctors />} />
+                    <Route path="/dashboard/Appointments" element={<AdminPatient />} />
+                    <Route path="/dashboard/Appointments" element={<AdminSpecializations />} />
                 </Route>
                 <Route path="/" element={<ClientLayout />}>
                     <Route path="/" element={<Home />} />

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-import Doctor from "../components/Doctor";
-import DoctorModal from "../components/DoctorModal";
+import { AppContext } from "../../context/AppContext";
+import Doctor from "../../components/admin/Doctor";
+import DoctorModal from "../../components/admin/DoctorModal";
 import { Button } from "@material-tailwind/react";
 
 const Doctors = () => {
