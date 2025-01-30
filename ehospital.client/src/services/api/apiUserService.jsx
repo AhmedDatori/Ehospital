@@ -30,15 +30,6 @@ export const userLogout = async () => {
     localStorage.clear();
 }
 
-export const userRegister = async (userData) => {
-}
-
-export const userDelete = async (userID) => {
-}
-
-export const userUpdate = async (userData) => {
-}
-
 export const userGet = async (token) => {
     const decodedToken = jwtDecode(token);
     const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
@@ -49,6 +40,7 @@ export const userGet = async (token) => {
 
         const userData = response.data;
         userData.role = role;
+        localStorage.setItem("role", role);
         userData.userID = userID;
 
         return userData;
@@ -57,3 +49,4 @@ export const userGet = async (token) => {
         throw error;
     }
 }
+
