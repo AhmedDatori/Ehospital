@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { assets } from "../../assets/assets_frontend/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
+import { apiConfig } from "../../services/apiConfig";
 
 function ClientNavBar() {
   const navigate = useNavigate();
@@ -24,7 +25,10 @@ function ClientNavBar() {
     if (!accessToken) {
       navigate("/login");
     } else if (curUser) {
-      setIsPatient(curUser.role === "patient"); // Check if user is a patient
+        setIsPatient(curUser.role === "patient"); // Check if user is a patient
+        if (!isPatient) {
+            navigate(apiConfig.ADMIN_DASHBOARD_URL);
+        }
     }
   }, [accessToken, curUser, navigate]);
 

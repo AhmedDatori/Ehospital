@@ -13,7 +13,6 @@ const Doctors = () => {
 
   const {
     doctors,
-    getSpecialtyName,
     deleteUser,
     specialities,
     createUser,
@@ -28,7 +27,7 @@ const Doctors = () => {
   const applyFilter = () => {
     if (speciality) {
       const filtered = doctors.filter((doc) => {
-        const specName = getSpecialtyName(doc.specializationID);
+          const specName = doc.specialization;
         return specName === speciality;
       });
       setFilteredDoctors(filtered);
@@ -113,7 +112,6 @@ const Doctors = () => {
             <Doctor
               key={doctor.id}
               doctor={doctor}
-              specName={getSpecialtyName(doctor.specializationID)}
               onView={() => handleOpenModalForView(doctor)}
               onEdit={() => handleOpenModalForEdit(doctor)}
             />

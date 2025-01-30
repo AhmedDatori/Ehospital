@@ -37,6 +37,7 @@ function AdminNavBar() {
             navigate("/Dashboard/login"); // Redirect to login if no access token
         } else if (curUser) {
             setIsAdmin(curUser.role === "admin"); // Check if user is admin
+            if (curUser.role === "patients") navigate("/");
         }
     }, [accessToken, curUser, navigate]);
 

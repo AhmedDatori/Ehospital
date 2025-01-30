@@ -34,10 +34,12 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/dashboard/login" element={<AdminLogin />} />
                     <Route path="/dashboard/Appointments" element={<AdminAppointments />} />
-                    <Route path="/dashboard/MyProfile" element={<AdminMyProfile />} />
-                    <Route path="/dashboard/Appointments" element={<AdminDoctors />} />
-                    <Route path="/dashboard/Appointments" element={<AdminPatient />} />
-                    <Route path="/dashboard/Appointments" element={<AdminSpecializations />} />
+                    <Route path="/dashboard/my-profile" element={<AdminMyProfile />} />
+                    <Route path="/dashboard/Doctors" element={<AdminDoctors />} />
+                    <Route path="/dashboard/Doctors/:speciality" element={<AdminDoctors />} />
+                    <Route path="/dashboard/Patients" element={<AdminPatient />} />
+                    <Route path="/dashboard/Patient/:patientID" element={<AdminPatient />} />
+                    <Route path="/dashboard/Specialization" element={<AdminSpecializations />} />
                 </Route>
                 <Route path="/" element={<ClientLayout />}>
                     <Route path="/" element={<Home />} />

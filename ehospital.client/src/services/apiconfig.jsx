@@ -13,6 +13,6 @@ export const apiConfig = {
     get SPECIALTIES_URL() { return `${this.API_URL}/Specializations`; },
     get APPOINTMENTS_URL() { return `${this.API_URL}/appointments`; },
 
-    get ADMIN_DASHBOARD_URL() { return `https://localhost:11954`; },
+    get ADMIN_DASHBOARD_URL() { return `/Dashboard`; },
 
 };
