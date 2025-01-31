@@ -24,7 +24,7 @@ function ClientNavBar() {
             setShowMenu(false);
         } else if (currentUser) {
             console.log("Current user:", currentUser);
-            setIsPatient(currentUser.role === "patient"); // Check if user is a patient
+            setIsPatient(currentUser.role == "patient"); // Check if user is a patient
             setShowMenu(true);
             if (!isPatient) {
                 //navigate(apiConfig.ADMIN_DASHBOARD_URL);
