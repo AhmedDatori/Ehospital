@@ -22,20 +22,38 @@ const AppContextProvider = ({ children }) => {
     const [doctors, setDoctors] = useState([]);
     const [patients, setPatients] = useState([]);
     const [appointments, setAppointments] = useState([]);
-    const [currentUser, setCurrentUser] = useState(getCurrentUser());
+    const [currentUser, setCurrentUser] = useState({});
     const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+    const [isDataFetched, setIsDataFetched] = useState(false);  // Flag to prevent re-running
+
+
+    useEffect(() => {
+        const welcom = sessionStorage.getItem("welcom");
+        if (!welcom) {
+            toast.success("Welcome to eHospital");
+            sessionStorage.setItem("welcom", "true");
+        }
+    }, []);
 
     useEffect(() => {
         const initialize = async () => {
-            toast.success("Welcome to eHospital");
-            getDoctors();
-            getSpecialities();
-            getCurrentUser();
-            setTokens();
+            if (!isDataFetched) {  // Check if data has already been fetched
+                await setTokens();
+                await getCurrentUser();
+                await getDoctors();
+                await getSpecialities();
+                console.log("AppContext initialized");
+                console.log("Access Token: ", accessToken);
+                console.log("Current User: ", currentUser);
+                console.log("Specialities: ", specialities);
+                console.log("Doctors: ", doctors);
+
+                setIsDataFetched(true); // Set the flag to true to prevent further fetching
+            }
         };
         initialize();
+    }, [isDataFetched, accessToken, currentUser, doctors, specialities]);  // Add `isDataFetched` in dependencies to prevent infinite loop
 
-    }, []);
 
     const setTokens = () => {
         if (localStorage.getItem("accessToken")) {
@@ -43,36 +61,39 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
-
+    //useEffect(() => {
+    //    console.log("specialities updated", specialities)
+    //}, [specialities]);
 
     // get all data
     const getSpecialities = async () => {
         // get specialities
-        await apiSpeciality.getSpecialities()
-            .then((response) => {
-                setSpecialities(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const specialitiesData = await apiSpeciality.getSpecialities()
+        if (specialitiesData) {
+            if (specialitiesData != specialities) {
+                console.log("Specialities Data", specialitiesData);
+                setSpecialities(specialitiesData);
+                console.log("Specialities Data", specialities);
+            }
+        }
     };
 
     const getDoctors = async () => {
         // get doctors
-        await apiDoctor.getDoctors()
-            .then((response) => {
-                setDoctors(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const doctorsData = await apiDoctor.getDoctors()
+        if (doctorsData) {
+            if (doctorsData != doctors) {
+                console.log("doctors Data", doctorsData);
+                setDoctors(doctorsData);
+            }
+        }
     }
 
     const getPatients = async () => {
         // get patients
         await apiPatient.getPatients()
             .then((response) => {
-                setPatients(response.data);
+                setPatients(response);
             })
             .catch((error) => {
                 console.log(error);
@@ -83,7 +104,7 @@ const AppContextProvider = ({ children }) => {
         // get appointments
         await apiAppointment.getAppointments()
             .then((response) => {
-                setAppointments(response.data);
+                setAppointments(response);
             })
             .catch((error) => {
                 console.log(error);
@@ -93,22 +114,17 @@ const AppContextProvider = ({ children }) => {
 
 
 
-    //login
-    const login = async (data) => {
-        await apiUser.login(data)
-            .then((response) => {
-                setCurrentUser(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////login
+    //const login = async (data) => {
+    //    const response = await apiUser.userLogin(data);
+    //    return response;
+    //};
 
-    //logout
-    const logout = async () => {
-        await apiUser.userLogout();
-        setCurrentUser(null);
-    };
+    ////logout
+    //const logout = async () => {
+    //    await apiUser.userLogout();
+    //    setCurrentUser(null);
+    //};
 
     //get current user
     const getCurrentUser = async () => {
@@ -126,258 +142,181 @@ const AppContextProvider = ({ children }) => {
 
 
 
-    //create new patient
-    const createPatient = async (data) => {
-        await apiPatient.createPatient(data)
-            .then((response) => {
-                toast.success("Account created successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////create new patient
+    //const createPatient = async (data) => {
+    //    const response = await apiPatient.createPatient(data)
+    //    return response;
+    //};
 
-    //create new doctor
-    const createDoctor = async (data) => {
-        await apiDoctor.createDoctor(data)
-            .then((response) => {
-                toast.success("Doctor created successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////create new doctor
+    //const createDoctor = async (data) => {
+    //    const response = await apiDoctor.createDoctor(data)
+    //    return response;
+    //};
 
-    //create new speciality
-    const createSpeciality = async (data) => {
-        await apiSpeciality.createSpeciality(data)
-            .then((response) => {
-                toast.success("Speciality created successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////create new speciality
+    //const createSpeciality = async (data) => {
+    //    const response = await apiSpeciality.createSpeciality(data)
+    //    return response;
+    //};
 
-    //create new appointment
-    const createAppointment = async (data) => {
-        await apiAppointment.createAppointment(data)
-            .then((response) => {
-                toast.success("Appointment created successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////create new appointment
+    //const createAppointment = async (data) => {
+    //    const response = await apiAppointment.createAppointment(data)
+    //    return response;
+    //};
 
 
 
 
-    //update patient
-    const updatePatient = async (data) => {
-        await apiPatient.updatePatient(data)
-            .then((response) => {
-                toast.success("Account updated successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////update patient
+    //const updatePatient = async (data) => {
+    //    console.log("data to update", data);
+    //    const response = await apiPatient.updatePatient(data)
+    //    return response;
+    //};
 
-    //update doctor
-    const updateDoctor = async (data) => {
-        await apiDoctor.updateDoctor(data)
-            .then((response) => {
-                toast.success("Doctor updated successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////update doctor
+    //const updateDoctor = async (data) => {
+    //    const response = await apiDoctor.updateDoctor(data)
+    //    return response;
+    //};
 
-    //update admin
-    const updateAdmin = async (data) => {
-        await apiAdmin.updateAdmin(data)
-            .then((response) => {
-                toast.success("Admin updated successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////update admin
+    //const updateAdmin = async (data) => {
+    //    const response = await apiAdmin.updateAdmin(data)
+    //    return response;
+    //};
 
-    //update speciality
-    const updateSpeciality = async (data) => {
-        await apiSpeciality.updateSpeciality(data)
-            .then((response) => {
-                toast.success("Speciality updated successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    ////update speciality
+    //const updateSpeciality = async (data) => {
+    //    const response = await apiSpeciality.updateSpeciality(data)
+    //    return response;
+    //};
 
 
 
 
-    // delete patient
-    const deletePatient = async (id) => {
-        await apiPatient.deletePatient(id)
-            .then((response) => {
-                toast.success("Account deleted successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    //// delete patient
+    //const deletePatient = async (id) => {
+    //    const response = await apiPatient.deletePatient(id)
+    //    return response;
+    //};
 
-    // delete doctor
-    const deleteDoctor = async (id) => {
-        await apiDoctor.deleteDoctor(id)
-            .then((response) => {
-                toast.success("Doctor deleted successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    //// delete doctor
+    //const deleteDoctor = async (id) => {
+    //    const response = await apiDoctor.deleteDoctor(id)
+    //    return response;
+    //};
 
-    // delete appointment
-    const deleteAppointment = async (id) => {
-        await apiAppointment.deleteAppointment(id)
-            .then((response) => {
-                toast.success("Appointment deleted successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    //// delete appointment
+    //const deleteAppointment = async (id) => {
+    //    const response = await apiAppointment.deleteAppointment(id)
+    //    return response;
+    //};
 
-    // delete speciality
-    const deleteSpeciality = async (id) => {
-        await apiSpeciality.deleteSpeciality(id)
-            .then((response) => {
-                toast.success("Speciality deleted successfully");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    //// delete speciality
+    //const deleteSpeciality = async (id) => {
+    //    const response = await apiSpeciality.deleteSpeciality(id)
+    //    return response;
+    //};
 
 
 
 
-    // get doctor by id
-    const getDoctorById = async (id) => {
-        await apiDoctor.getDoctorById(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get doctor by id
+    //const getDoctorById = async (id) => {
+    //    const response = await apiDoctor.getDoctorById(id)
+    //    return response;
+    //}
 
-    // get patient by id
-    const getPatientById = async (id) => {
-        await apiPatient.getPatientById(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get patient by id
+    //const getPatientById = async (id) => {
+    //    const response = await apiPatient.getPatientById(id)
 
-    // get appointment by id
-    const getAppointmentById = async (id) => {
-        await apiAppointment.getAppointmentById(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //    return response;
+    //}
 
-    // get speciality by id
-    const getSpecialityById = async (id) => {
-        await apiSpeciality.getSpecialityById(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get appointment by id
+    //const getAppointmentById = async (id) => {
+
+    //        const response = await apiAppointment.getAppointmentById(id)
+    //        return response;
+    //}
+
+    //// get speciality by id
+    //const getSpecialityById = async (id) => {
+
+    //        const response = await apiSpeciality.getSpecialityById(id)
+    //        return response;
+
+    //}
 
 
 
 
-    // get doctor by speciality
-    const getDoctorBySpeciality = async (id) => {
-        await apiDoctor.getDoctorBySpeciality(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get doctor by speciality
+    //const getDoctorBySpeciality = async (id) => {
+    //    await apiDoctor.getDoctorBySpeciality(id)
+    //        .then((response) => {
+    //            return response;
+    //        })
+    //        .catch((error) => {
+    //            console.log(error);
+    //        });
+    //}
 
-    // get appointments by doctor
-    const getAppointmentsByDoctor = async (id) => {
-        await apiAppointment.getAppointmentsByDoctor(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get appointments by doctor
+    //const getAppointmentsByDoctor = async (id) => {
+    //    await apiAppointment.getAppointmentsByDoctor(id)
+    //        .then((response) => {
+    //            return response;
+    //        })
+    //        .catch((error) => {
+    //            console.log(error);
+    //        });
+    //}
 
-    // get appointments by patient
-    const getAppointmentsByPatient = async (id) => {
-        await apiAppointment.getAppointmentsByPatient(id)
-            .then((response) => {
-                return response;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    //// get appointments by patient
+    //const getAppointmentsByPatient = async (id) => {
+    //    const response = await apiAppointment.getAppointmentsByPatient(id)
+    //    console.log("response", response);
+    //    return response;
+
+    //}
 
     
     
     // use memot on all the functions
     const contextValue = useMemo(() => ({
+        setTokens,
         specialities,
         doctors,
         patients,
         appointments,
         currentUser,
-        login,
-        logout,
+        login: apiUser.userLogin,
+        logout: apiUser.userLogout,
         getCurrentUser,
-        createPatient,
-        createDoctor,
-        createSpeciality,
-        createAppointment,
-        updatePatient,
-        updateDoctor,
-        updateAdmin,
-        updateSpeciality,
-        deletePatient,
-        deleteDoctor,
-        deleteAppointment,
-        deleteSpeciality,
-        getDoctorById,
-        getPatientById,
-        getAppointmentById,
-        getSpecialityById,
-        getDoctorBySpeciality,
-        getAppointmentsByDoctor,
-        getAppointmentsByPatient,
+        createPatient: apiPatient.createPatient,
+        createDoctor: apiDoctor.createDoctor,
+        createSpeciality: apiSpeciality.createSpeciality,
+        createAppointment: apiAppointment.createAppointment,
+        updatePatient: apiPatient.updatePatient,
+        updateDoctor: apiDoctor.updateDoctor,
+        updateAdmin: apiAdmin.updateAdmin,
+        updateSpeciality: apiSpeciality.updateSpeciality,
+        deletePatient: apiPatient.deletePatient,
+        deleteDoctor: apiDoctor.deleteDoctor,
+        deleteAppointment: apiAppointment.deleteAppointment,
+        deleteSpeciality: apiSpeciality.deleteSpeciality,
+        getDoctorById: apiDoctor.getDoctorById,
+        getPatientById: apiPatient.getPatientById,
+        getAppointmentById: apiAppointment.getAppointmentById,
+        getSpecialityById: apiSpeciality.getSpecialityById,
+        getDoctorBySpeciality: apiDoctor.getDoctorsBySpeciality,
+        getAppointmentsByDoctor: apiAppointment.getAppointmentsByDoctor,
+        getAppointmentsByPatient: apiAppointment.getAppointmentsByPatient,
         accessToken,
         setAccessToken,
     }), [specialities, doctors, patients, appointments, currentUser, accessToken]);

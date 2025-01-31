@@ -117,6 +117,71 @@ namespace Ehospital.Server.Controllers
         }
 
         [Authorize]
+        [HttpGet("patient/{userId}")]
+        public async Task<ActionResult<List<AppointmentDto>>> GetAllAppointmentsByPatientID(Guid userId)
+        {
+            var cacheKey = $"Appointments_PatientID_{userId}";
+            var cachedData = cache.GetData<List<AppointmentDto>>(cacheKey);
+            if (cachedData != null)
+            {
+                return Ok(cachedData);
+            }
+
+            var query = from appointment in context.Appointments
+                        join doctor in context.Doctors on appointment.DoctorID equals doctor.Id
+                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id.ToString()
+                        join patient in context.Patients on appointment.PatientID equals patient.Id
+                        where (patient.Id == userId)
+                        select new AppointmentDto
+                        {
+                            Id = appointment.Id,
+                            DoctorID = doctor.Id,
+                            DoctorName = doctor.FirstName + " " + doctor.LastName,
+                            SpecialityName = specialization.Name,
+                            PatientName = patient.FirstName + " " + patient.LastName,
+                            PatientID = patient.Id
+                        };
+
+            var appointmentsData = await query.ToListAsync();
+
+            // Caching the data
+            cache.SetData(cacheKey, appointmentsData);
+            return Ok(appointmentsData);
+        }
+
+        [Authorize]
+        [HttpGet("doctor/{userId}")]
+        public async Task<ActionResult<List<AppointmentDto>>> GetAllAppointmentsByDoctorID(Guid userId)
+        {
+            var cacheKey = $"Appointments_DoctorID_{userId}";
+            var cachedData = cache.GetData<List<AppointmentDto>>(cacheKey);
+            if (cachedData != null)
+            {
+                return Ok(cachedData);
+            }
+
+            var query = from appointment in context.Appointments
+                        join doctor in context.Doctors on appointment.DoctorID equals doctor.Id
+                        join specialization in context.Specializations on doctor.SpecializationID equals specialization.Id.ToString()
+                        join patient in context.Patients on appointment.PatientID equals patient.Id
+                        where (doctor.Id == userId)
+                        select new AppointmentDto
+                        {
+                            Id = appointment.Id,
+                            DoctorID = doctor.Id,
+                            DoctorName = doctor.FirstName + " " + doctor.LastName,
+                            SpecialityName = specialization.Name,
+                            PatientName = patient.FirstName + " " + patient.LastName,
+                            PatientID = patient.Id
+                        };
+
+            var appointmentsData = await query.ToListAsync();
+
+            // Caching the data
+            cache.SetData(cacheKey, appointmentsData);
+            return Ok(appointmentsData);
+        }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAppointment(Guid id)
         {

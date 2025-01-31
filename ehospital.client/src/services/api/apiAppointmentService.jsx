@@ -3,62 +3,62 @@ import React from 'react';
 import axios from "axios";
 import { toast } from "sonner";
 import { apiConfig } from "../apiconfig";
+import { cache } from 'react';
 
 export const getAppointments = async (page, size) => {
-    await axios.get(apiConfig.APPOINTMENTS_URL + "?page=" + page + "&size=" + size)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.APPOINTMENTS_URL
+            //, {params: {page: page,size: size}}
+        );
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const getAppointmentById = async (appointmentId) => {
-    await axios.get(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const getAppointmentsByDoctor = async (doctorId) => {
-    await axios.get(apiConfig.APPOINTMENTS_URL + "/doctor/" + doctorId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/doctor/" + doctorId)
+        console.log("response", response.data);
+        return response.data;
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const getAppointmentsByPatient = async (patientId) => {
-    await axios.get(apiConfig.APPOINTMENTS_URL + "/patient/" + patientId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/patient/" + patientId)
+        return response.data;
+    } catch (err) {
+        console.log(err)
+    }
 }
-export const createAppointment = async (appointmentData) => {
-    await axios.post(apiConfig.APPOINTMENTS_URL, appointmentData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+export const createAppointment = async (DoctorID, PatientID) => {
+    try {
+        const response = await axios.post(apiConfig.APPOINTMENTS_URL, { PatientID: PatientID, DoctorID: DoctorID })
+        toast.success("Appointment created successfully");
+        return response.data;
+    } catch {
+        toast.error("Failed to create appointment");
+    }
 }
 
 export const deleteAppointment = async (appointmentId) => {
-    await axios.delete(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.delete(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
+        toast.success("Appointment deleted successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }

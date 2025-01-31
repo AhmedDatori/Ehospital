@@ -5,54 +5,50 @@ import { toast } from "sonner";
 import { apiConfig } from "../apiconfig";
 
 export const getSpecialities = async () => {
-    await axios.get(apiConfig.SPECIALITIES_URL)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
+    try {
+        const response = await axios.get(apiConfig.SPECIALTIES_URL);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 export const getSpecialityById = async (specialityId) => {
-    await axios.get(apiConfig.SPECIALITIES_URL + "/" + specialityId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.SPECIALTIES_URL + "/" + specialityId)
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const createSpeciality = async (specialityData) => {
-    await axios.post(apiConfig.SPECIALITIES_URL, specialityData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.post(apiConfig.SPECIALTIES_URL, specialityData)
+        toast.success("Speciality created successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const updateSpeciality = async (specialityData) => {
-    const id = specialityData.id;
-    await axios.put(apiConfig.SPECIALITIES_URL + "/" + id, specialityData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-
+    try {
+        const response = await axios.put(apiConfig.SPECIALTIES_URL + "/" + specialityData.id, specialityData)
+        toast.success("Speciality updated successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const deleteSpeciality = async (specialityId) => {
-    await axios.delete(apiConfig.SPECIALITIES_URL + "/" + specialityId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.delete(apiConfig.SPECIALTIES_URL + "/" + specialityId)
+        toast.success("Speciality deleted successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 

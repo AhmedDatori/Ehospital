@@ -5,53 +5,53 @@ import { toast } from "sonner";
 import { apiConfig } from "../apiconfig";
 
 export const getPatients = async (page, size) => {
-    await axios.get(apiConfig.PATIENTS_URL + "?page=" + page + "&size=" + size)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.PATIENTS_URL
+            //, {params: {page: page,size: size}}
+        );
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const getPatientById = async (patientId) => {
-    await axios.get(apiConfig.PATIENTS_URL + "/" + patientId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+    const response = await axios.get(apiConfig.PATIENTS_URL + "/" + patientId)
+    return response.data;
+
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const createPatient = async (patientData) => {
-    await axios.post(apiConfig.PATIENTS_URL, patientData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    console.log("patientData", patientData);
+    try {
+        const response = await axios.post(apiConfig.PATIENTS_URL, patientData)
+        toast.success("Patient Account created successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const updatePatient = async (patientData) => {
-    const id = patientData.id;
-    await axios.put(apiConfig.PATIENTS_URL + "/" + id, patientData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.put(apiConfig.PATIENTS_URL + "/" + patientData.id, patientData)
+        toast.success("Patient updated successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const deletePatient = async (patientId) => {
-    await axios.delete(apiConfig.PATIENTS_URL + "/" + patientId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.delete(apiConfig.PATIENTS_URL + "/" + patientId)
+        toast.success("Patient Account deleted successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
-

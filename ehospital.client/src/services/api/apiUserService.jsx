@@ -9,7 +9,9 @@ import AppContext from "../../context/AppContext";
 
 
 export const userLogin = async (userData) => {
+
     try {
+        console.log("Login data", userData)
         const response = await axios.post(
             `${apiConfig.LOGIN_URL}`,
             userData);
@@ -18,7 +20,7 @@ export const userLogin = async (userData) => {
         localStorage.setItem("accessToken", tokens.accessToken);
         localStorage.setItem("refreshToken", tokens.refreshToken);
         const user = await userGet(tokens.accessToken);
-
+        
         return user;
     } catch (error) {
         toast.error("Failed to login");
@@ -42,6 +44,8 @@ export const userGet = async (token) => {
         userData.role = role;
         localStorage.setItem("role", role);
         userData.userID = userID;
+
+        console.log("User data:", userData);
 
         return userData;
     } catch (error) {

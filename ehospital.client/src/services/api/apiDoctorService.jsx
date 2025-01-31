@@ -6,62 +6,64 @@ import { apiConfig } from "../apiconfig";
 
 
 export const getDoctors = async (page, size) => {
-    await axios.get(apiConfig.DOCTORS_URL + "?page=" + page + "&size=" + size)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
+    try {
+        const response = await axios.get(apiConfig.DOCTORS_URL
+            //, {params: {page: page,size: size}}
+        );
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 export const getDoctorById = async (doctorId) => {
-    await axios.get(apiConfig.DOCTORS_URL + "/" + doctorId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        console.log("get", doctorId)
+        const response = await axios.get(apiConfig.DOCTORS_URL + "/" + doctorId)
+        console.log("now", response.data)
+
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const getDoctorsBySpeciality = async (speciality) => {
-    await axios.get(apiConfig.DOCTORS_URL + "/speciality/" + speciality)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.get(apiConfig.DOCTORS_URL + "/speciality/" + speciality)
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const createDoctor = async (doctorData) => {
-    await axios.post(apiConfig.DOCTORS_URL, doctorData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.post(apiConfig.DOCTORS_URL, doctorData)
+        toast.success("Doctor created successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const updateDoctor = async (doctorData) => {
-    await axios.put(apiConfig.DOCTORS_URL, doctorData)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.put(apiConfig.DOCTORS_URL + "/" + doctorData.id, doctorData)
+        toast.success("Doctor updated successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export const deleteDoctor = async (doctorId) => {
-    await axios.delete(apiConfig.DOCTORS_URL + "/" + doctorId)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.delete(apiConfig.DOCTORS_URL + "/" + doctorId)
+        toast.success("Doctor deleted successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
