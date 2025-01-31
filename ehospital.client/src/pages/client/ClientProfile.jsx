@@ -4,6 +4,7 @@ import { assets } from "../../assets/assets_frontend/assets";
 import { AppContext } from "../../context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { userLogout } from "../../services/api/apiUserService";
 
 const ClientProfile = () => {
     const [isEdit, setIsEdit] = useState(false);
@@ -14,6 +15,8 @@ const ClientProfile = () => {
         updatePatient,
         deletePatient,
         getPatientById,
+        setTokens,
+        logout
     } = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -24,8 +27,9 @@ const ClientProfile = () => {
             //console.log(accessToken, curUser)
             if (accessToken && currentUser) {
                 try {
-                    console.log("Fetching user data...", currentUser);
+                    //console.log("Fetching user data...", currentUser);
                     const userData = await getPatientById(currentUser?.id);
+                    
                     if (userData && isMounted) {
                         //console.log(userData)
                         setUser({
@@ -74,9 +78,9 @@ const ClientProfile = () => {
         }
 
         try {
-            console.log("updated data", user)
+            //console.log("updated data", user)
             const updatedUser = await updatePatient(user);
-            console.log("updated user", updatedUser)
+            //console.log("updated user", updatedUser)
             setUser(updatedUser);
             setIsEdit(false);
         } catch (error) {
@@ -87,6 +91,7 @@ const ClientProfile = () => {
 
     // delete account
     const handleDeleteAccount = async () => {
+        //console.log(accessToken,currentUser)
         if (!accessToken || !currentUser) {
             toast.error("You are not logged in. Please log in and try again.");
             navigate("/login");
@@ -94,8 +99,9 @@ const ClientProfile = () => {
         }
 
         try {
-            await deletePatient(user.id);
-            toast.success("Account deleted successfully!");
+            const response = await deletePatient(user.id);
+            await logout();
+            setTokens();
             navigate("/login");
         } catch (error) {
             console.error("Error deleting account:", error);

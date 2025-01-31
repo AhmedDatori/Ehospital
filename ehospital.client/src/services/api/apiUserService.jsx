@@ -4,14 +4,14 @@ import axios from "axios";
 import { toast } from "sonner";
 import { apiConfig } from "../apiconfig";
 import { jwtDecode } from "jwt-decode";
-import AppContext from "../../context/AppContext";
+//import AppContext from "../../context/AppContext";
 
 
 
 export const userLogin = async (userData) => {
-
+    if (!userData) return;
     try {
-        console.log("Login data", userData)
+        //console.log("Login data", userData)
         const response = await axios.post(
             `${apiConfig.LOGIN_URL}`,
             userData);
@@ -19,6 +19,7 @@ export const userLogin = async (userData) => {
         const tokens = response.data;
         localStorage.setItem("accessToken", tokens.accessToken);
         localStorage.setItem("refreshToken", tokens.refreshToken);
+        localStorage.setItem("role", tokens.role);
         const user = await userGet(tokens.accessToken);
         
         return user;
@@ -33,6 +34,7 @@ export const userLogout = async () => {
 }
 
 export const userGet = async (token) => {
+    if (!token) return
     const decodedToken = jwtDecode(token);
     const role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     const userID = decodedToken.userID;
@@ -45,7 +47,7 @@ export const userGet = async (token) => {
         localStorage.setItem("role", role);
         userData.userID = userID;
 
-        console.log("User data:", userData);
+        //console.log("User data:", userData);
 
         return userData;
     } catch (error) {

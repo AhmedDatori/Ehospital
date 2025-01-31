@@ -23,7 +23,7 @@ function ClientNavBar() {
             //navigate("/login");
             setShowMenu(false);
         } else if (currentUser) {
-            console.log("Current user:", currentUser);
+            //console.log("Current user:", currentUser);
             setIsPatient(currentUser.role == "patient"); // Check if user is a patient
             setShowMenu(true);
             if (!isPatient) {
@@ -57,9 +57,14 @@ function ClientNavBar() {
 
     const handleLogout = () => {
         logout();
-        setShowMenu(false);
+        
         navigate("/login");
     };
+
+    useEffect(() => {
+        //console.log("Access Token Changed:", accessToken);
+    }, [accessToken]);
+
 
     return (
         <div className="flex justify-between items-center py-4 mb-5 border-b-2 border-gray-400">

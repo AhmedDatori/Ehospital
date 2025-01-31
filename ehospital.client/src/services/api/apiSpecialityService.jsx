@@ -14,6 +14,7 @@ export const getSpecialities = async () => {
 };
 
 export const getSpecialityById = async (specialityId) => {
+    if (!specialityId) return;
     try {
         const response = await axios.get(apiConfig.SPECIALTIES_URL + "/" + specialityId)
         return response.data;
@@ -23,6 +24,7 @@ export const getSpecialityById = async (specialityId) => {
 }
 
 export const createSpeciality = async (specialityData) => {
+    if (!specialityData) return;
     try {
         const response = await axios.post(apiConfig.SPECIALTIES_URL, specialityData)
         toast.success("Speciality created successfully");
@@ -33,6 +35,7 @@ export const createSpeciality = async (specialityData) => {
 }
 
 export const updateSpeciality = async (specialityData) => {
+    if (!specialityData) return;
     try {
         const response = await axios.put(apiConfig.SPECIALTIES_URL + "/" + specialityData.id, specialityData)
         toast.success("Speciality updated successfully");
@@ -43,6 +46,7 @@ export const updateSpeciality = async (specialityData) => {
 }
 
 export const deleteSpeciality = async (specialityId) => {
+    if (!specialityId) return;
     try {
         const response = await axios.delete(apiConfig.SPECIALTIES_URL + "/" + specialityId)
         toast.success("Speciality deleted successfully");

@@ -11,6 +11,7 @@ const ClientLogin = () => {
         accessToken,
         login,
         createPatient,
+        getCurrentUser
     } = useContext(AppContext);
 
     const [PatientFormData, setPatientFormData] = useState({
@@ -59,20 +60,22 @@ const ClientLogin = () => {
         if (!accessToken) {
             if (isLogin) {
                 const response = await login(formData);
-                console.log("Response:", response);
+                //console.log("Response:", response);
+                await getCurrentUser();
                 if (response) {
                     setIsLogin(false);
                     if (response == "patient") {
-                        console.log("patient login")
+                        //console.log("patient login")
                     }
                     navigate("/MyProfile");
                 }
-            }
-        } else {
-            await createPatient(formData);
-            setIsLogin(true);
+            } else {
+                const response = await createPatient(formData);
+                //console.log("Response:", response);
+                setIsLogin(true);
 
-        }
+            }
+        } 
     }
 
 

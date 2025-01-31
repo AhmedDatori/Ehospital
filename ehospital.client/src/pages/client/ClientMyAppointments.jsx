@@ -14,12 +14,12 @@ const ClientMyAppointments = () => {
 
     useEffect(() => {
         const fetchAppointments = async () => {
-            console.log("Fetching appointments...");
-            console.log("Access token:", accessToken, currentUser);
+            //console.log("Fetching appointments...");
+            //console.log("Access token:", accessToken, currentUser);
             if (accessToken && currentUser) {
 
                 const fetchedAppointments = await getAppointmentsByPatient(currentUser.id);
-                console.log("fetchedAppointments", fetchedAppointments);
+                //console.log("fetchedAppointments", fetchedAppointments);
                 setAppointments(fetchedAppointments || []);
 
             }

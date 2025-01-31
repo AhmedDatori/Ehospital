@@ -234,19 +234,23 @@ namespace Ehospital.Server.Controllers
         {
             var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
             var currentUserID = HttpContext.User.FindFirstValue("userID");
-            // Allow only admins, doctors and the patient himself to delete
-            if (currentUserRole == "patient" && currentUserID != id.ToString())
-            {
-                return Unauthorized("You are not authorized to delete this information.");
-            }
 
-            
 
             var patientToDelete = await context.Patients.FindAsync(id);
             if (patientToDelete == null)
             {
                 return NotFound("Patient not found.");
             }
+
+
+            // Allow only admins, doctors and the patient himself to delete
+            if (currentUserRole == "patient" && currentUserID != patientToDelete.UserID.ToString())
+            {
+                return Unauthorized("You are not authorized to delete this information.");
+            }
+
+            
+
             var userToDelete = await context.Users.FindAsync(patientToDelete.UserID);
             if (userToDelete == null)
             {

@@ -17,6 +17,7 @@ export const getAppointments = async (page, size) => {
 }
 
 export const getAppointmentById = async (appointmentId) => {
+    if (!appointmentId) return;
     try {
         const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
         return response.data;
@@ -26,6 +27,7 @@ export const getAppointmentById = async (appointmentId) => {
 }
 
 export const getAppointmentsByDoctor = async (doctorId) => {
+    if (!doctorId) return;
     try {
         const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/doctor/" + doctorId)
         console.log("response", response.data);
@@ -36,6 +38,7 @@ export const getAppointmentsByDoctor = async (doctorId) => {
 }
 
 export const getAppointmentsByPatient = async (patientId) => {
+    if (!patientId) return;
     try {
         const response = await axios.get(apiConfig.APPOINTMENTS_URL + "/patient/" + patientId)
         return response.data;
@@ -44,6 +47,7 @@ export const getAppointmentsByPatient = async (patientId) => {
     }
 }
 export const createAppointment = async (DoctorID, PatientID) => {
+    if (!DoctorID || !PatientID) return;
     try {
         const response = await axios.post(apiConfig.APPOINTMENTS_URL, { PatientID: PatientID, DoctorID: DoctorID })
         toast.success("Appointment created successfully");
@@ -54,11 +58,12 @@ export const createAppointment = async (DoctorID, PatientID) => {
 }
 
 export const deleteAppointment = async (appointmentId) => {
+    if (!appointmentId) return;
     try {
         const response = await axios.delete(apiConfig.APPOINTMENTS_URL + "/" + appointmentId)
         toast.success("Appointment deleted successfully");
         return response.data;
     } catch (err) {
-        console.log(err);
+        toast.error("Failed to deleted appointment")
     }
 }

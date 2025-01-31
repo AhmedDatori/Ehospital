@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { apiConfig } from "../apiconfig";
 
 export const getAdminById = async (adminId) => {
+    if (!adminId) return;
     try {
         const response = await axios.get(apiConfig.ADMINS_URL + "/" + adminId)
         return response.data;
@@ -14,6 +15,7 @@ export const getAdminById = async (adminId) => {
 }
 
 export const updateAdmin = async (adminData) => {
+    if (!adminData) return;
     try {
         const response = await axios.put(apiConfig.ADMINS_URL + "/" + adminData.id, adminData)
         toast.success("Admin updated successfully");
@@ -24,6 +26,7 @@ export const updateAdmin = async (adminData) => {
 }
 
 export const deleteAdmin = async (adminId) => {
+    if (!adminId) return;
     try {
         const response = await axios.delete(apiConfig.ADMINS_URL + "/" + adminId)
         toast.success("Admin deleted successfully");

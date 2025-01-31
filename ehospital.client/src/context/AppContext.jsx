@@ -42,11 +42,11 @@ const AppContextProvider = ({ children }) => {
                 await getCurrentUser();
                 await getDoctors();
                 await getSpecialities();
-                console.log("AppContext initialized");
-                console.log("Access Token: ", accessToken);
-                console.log("Current User: ", currentUser);
-                console.log("Specialities: ", specialities);
-                console.log("Doctors: ", doctors);
+                //console.log("AppContext initialized");
+                //console.log("Access Token: ", accessToken);
+                //console.log("Current User: ", currentUser);
+                //console.log("Specialities: ", specialities);
+                //console.log("Doctors: ", doctors);
 
                 setIsDataFetched(true); // Set the flag to true to prevent further fetching
             }
@@ -58,6 +58,8 @@ const AppContextProvider = ({ children }) => {
     const setTokens = () => {
         if (localStorage.getItem("accessToken")) {
             setAccessToken(localStorage.getItem("accessToken"));
+        } else {
+            setAccessToken(null);
         }
     }
 
@@ -71,9 +73,9 @@ const AppContextProvider = ({ children }) => {
         const specialitiesData = await apiSpeciality.getSpecialities()
         if (specialitiesData) {
             if (specialitiesData != specialities) {
-                console.log("Specialities Data", specialitiesData);
+                //console.log("Specialities Data", specialitiesData);
                 setSpecialities(specialitiesData);
-                console.log("Specialities Data", specialities);
+                //console.log("Specialities Data", specialities);
             }
         }
     };
@@ -83,7 +85,7 @@ const AppContextProvider = ({ children }) => {
         const doctorsData = await apiDoctor.getDoctors()
         if (doctorsData) {
             if (doctorsData != doctors) {
-                console.log("doctors Data", doctorsData);
+                //console.log("doctors Data", doctorsData);
                 setDoctors(doctorsData);
             }
         }
@@ -111,20 +113,19 @@ const AppContextProvider = ({ children }) => {
             });
     }
 
+    //login
+    const login = async (data) => {
+        const response = await apiUser.userLogin(data);
+        setTokens();
+        return response;
+    };
 
-
-
-    ////login
-    //const login = async (data) => {
-    //    const response = await apiUser.userLogin(data);
-    //    return response;
-    //};
-
-    ////logout
-    //const logout = async () => {
-    //    await apiUser.userLogout();
-    //    setCurrentUser(null);
-    //};
+    //logout
+    const logout = async () => {
+        await apiUser.userLogout();
+        setTokens();
+        setCurrentUser(null);
+    };
 
     //get current user
     const getCurrentUser = async () => {
@@ -295,8 +296,8 @@ const AppContextProvider = ({ children }) => {
         patients,
         appointments,
         currentUser,
-        login: apiUser.userLogin,
-        logout: apiUser.userLogout,
+        login,
+        logout,
         getCurrentUser,
         createPatient: apiPatient.createPatient,
         createDoctor: apiDoctor.createDoctor,

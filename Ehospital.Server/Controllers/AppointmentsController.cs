@@ -201,6 +201,8 @@ namespace Ehospital.Server.Controllers
 ;
             cache.DeleteData($"Appointments_UserID_{doctor.UserID}");
             cache.DeleteData($"Appointments_UserID_{patient.UserID}");
+            cache.DeleteData($"Appointments_PatientID_{patient.Id}");
+            cache.DeleteData($"Appointments_DoctorID_{doctor.Id}");
 
             return Ok(new { Message = "Appointment deleted successfully." });
         }
@@ -233,6 +235,8 @@ namespace Ehospital.Server.Controllers
 
             cache.DeleteData($"Appointments_UserID_{doctor.UserID}");
             cache.DeleteData($"Appointments_UserID_{patient.UserID}");
+            cache.DeleteData($"Appointments_PatientID_{patient.Id}");
+            cache.DeleteData($"Appointments_DoctorID_{doctor.Id}");
 
 
             return CreatedAtAction(nameof(GetAppointmentById), new { id = newAppointment.Id }, newAppointment);
