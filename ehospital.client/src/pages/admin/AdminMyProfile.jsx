@@ -7,17 +7,25 @@ import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const [user, setUser] = useState({});
-  const { accessToken, curUser, fetchUserById, updateUser, deleteUser } =
-    useContext(AppContext);
+    const [user, setUser] = useState({});
+    const { accessToken, currentUser, getDoctorById, getAdminById, updateDoctor, deleteDoctor, updateAdmin, deleteUser,deleteAdmin } =
+        useContext(AppContext);
+    const [userDataFetched, setUserDataFetched] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (accessToken && curUser?.userID && curUser?.role) {
+        if (accessToken && currentUser) {
         try {
-          const userData = await fetchUserById(curUser.userID, curUser.role);
-          if (userData) {
+            var userData;
+            if (currentUser.role === "doctor") {
+                userData = await getDoctorById(currentUser.id);
+            } else if (currentUser.role === "admin") {
+                userData = await getAdminById(currentUser.id);
+            }
+            if (userData && !userDataFetched) {
+                console.log(userData)
+                setUserDataFetched(true);
             setUser({
               id: userData.id,
               firstName: userData.firstName,
@@ -30,7 +38,6 @@ const MyProfile = () => {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
-          toast.error("Failed to fetch user data");
         }
       } else {
         toast.error("You are not logged in. Please log in and try again.");
@@ -38,8 +45,8 @@ const MyProfile = () => {
       }
     };
 
-    fetchUserData();
-  }, [accessToken, curUser?.userID, curUser?.role, fetchUserById, navigate]);
+      fetchUserData();
+  }, [accessToken, currentUser, navigate, userDataFetched]);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -54,32 +61,43 @@ const MyProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!accessToken || !curUser) {
+      if (!accessToken || !currentUser) {
       toast.error("You are not logged in. Please log in and try again.");
         navigate("/dashboard/login");
       return;
     }
 
     try {
-      const updatedUser = await updateUser(user.id, curUser.role, user);
+        var updatedUser;
+        if (currentUser.role === "doctor") {
+            updatedUser = await updateDoctor(user);
+        } else if (currentUser.role === "admin") {
+            console.log("user",user)
+            updatedUser = await updateAdmin(user)
+        }
       setUser(updatedUser);
-      setIsEdit(false);
+        setIsEdit(false);
     } catch (error) {
       console.error("Error updating account:", error);
       toast.error("Error updating account. Please try again.");
     }
+        setUserDataFetched(false);
   };
 
   // Handle deleting account
   const handleDeleteAccount = async () => {
-    if (!accessToken || !curUser) {
+      if (!accessToken || !currentUser) {
       toast.error("You are not logged in. Please log in and try again.");
         navigate("/dashboard/login");
       return;
     }
 
-    try {
-      await deleteUser(user.id, curUser.role);
+      try {
+          if (currentUser.role === "doctor") {
+              await deleteDoctor(user.id);
+          } else if (currentUser.role === "admin") {
+              await deleteAdmin(user.id);
+          }
         navigate("/dashboard/login");
     } catch (error) {
       console.error("Error deleting account:", error);

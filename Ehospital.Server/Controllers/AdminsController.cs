@@ -22,34 +22,58 @@ namespace Ehospital.Server.Controllers
             // Redis cache
             var cacheKey = $"admin_{id}";
 
-            var admin = cache.GetData<Admin>(cacheKey);
+            var adminDto = cache.GetData<AdminDto>(cacheKey);
 
-            if (admin == null)
+            if (adminDto == null)
             {
-                admin = await context.Admins.FindAsync(id);
+                var admin = await context.Admins.FindAsync(id);
                 if (admin == null) return NotFound();
 
-                cache.SetData(cacheKey, admin);
+                var user = await context.Users.FindAsync(admin.UserID);
+                if (user == null) return NotFound();
+
+                adminDto = new AdminDto
+                {
+                    Id = admin.Id,
+                    FirstName = admin.FirstName,
+                    LastName = admin.LastName,
+                    Email = user.Email,
+                    Password = null,
+                    Birthdate = admin.Birthdate
+                };
+
+                cache.SetData(cacheKey, adminDto);
             }
-            return Ok(admin);
+            return Ok(adminDto);
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("userId/{userID}")]
+        [HttpGet("UserId/{userID}")]
         public async Task<ActionResult> GetAdminByUserID(Guid userID)
         {
             // Redis cache
             var cacheKey = $"admin_userId_{userID}";
-            var admin = cache.GetData<Admin>(cacheKey);
 
-            if (admin == null)
+            var adminDto = cache.GetData<AdminDto>(cacheKey);
+
+            if (adminDto == null)
             {
-                admin = await context.Admins.FirstOrDefaultAsync(a => a.UserID == userID);
+                var admin = await context.Admins.FirstOrDefaultAsync(a => a.UserID == userID);
                 if (admin == null) return NotFound();
-
-                cache.SetData(cacheKey, admin);
+                var user = await context.Users.FindAsync(admin.UserID);
+                if (user == null) return NotFound();
+                adminDto = new AdminDto
+                {
+                    Id = admin.Id,
+                    FirstName = admin.FirstName,
+                    LastName = admin.LastName,
+                    Email = user.Email,
+                    Password = null,
+                    Birthdate = admin.Birthdate
+                };
+                cache.SetData(cacheKey, adminDto);
             }
-            return Ok(admin);
+            return Ok(adminDto);
         }
 
         //[Authorize(Roles = "admin")]
@@ -101,6 +125,9 @@ namespace Ehospital.Server.Controllers
             adminToUpdate.Birthdate = admin.Birthdate;
             await context.SaveChangesAsync();
             cache.DeleteData("admins");
+            cache.DeleteData("admin_" + id);
+            cache.DeleteData("admin_userId_" + adminToUpdate.UserID);
+
             return Ok(adminToUpdate);
         }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { assets } from "../../assets/assets_frontend/assets";
 import { AppContext } from "../../context/AppContext";
@@ -6,75 +7,57 @@ import { useNavigate } from "react-router-dom";
 
 const AdminAppointments = () => {
   const {
-    getAllAppointments,
-    getAppointmentsByID,
+      getAppointments,
+      getAppointmentsByDoctor,
     accessToken,
     getCurrentUser,
-    curUser,
+    currentUser,
     deleteAppointment,
   } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLoading, setUserLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
-    } else if (!curUser) {
+    } else if (!currentUser) {
       getCurrentUser().finally(() => setUserLoading(false));
     } else {
       setUserLoading(false);
     }
-  }, [accessToken, curUser, navigate]);
+  }, [accessToken, currentUser, navigate]);
 
-  useEffect(() => {
-    if (curUser) {
-      setIsAdmin(curUser.role === "admin");
-    }
-  }, [curUser]);
 
-  let mounted = true;
   useEffect(() => {
     const fetchAppointments = async () => {
-      if (!mounted) return;
+        if (appointments.length > 0) return;
       // console.log("Fetching appointments...");
       if (!accessToken || userLoading) return;
       try {
-        var fetchedAppointments;
-        if (curUser && curUser.role === "admin") {
-          fetchedAppointments = await getAllAppointments();
-        } else if (curUser && curUser.role === "doctor") {
-          fetchedAppointments = await getAppointmentsByID(curUser.id, "doctor");
-        }
+          var fetchedAppointments;
+          if (currentUser) {
+              if (currentUser.role === "admin") {
+                  fetchedAppointments = await getAppointments();
+              } else if (currentUser.role === "doctor") {
+                  fetchedAppointments = await getAppointmentsByDoctor(currentUser.id);
+              }
+          }
 
-        if (mounted) {
           setAppointments(fetchedAppointments || []);
-        }
       } catch (error) {
         console.error("Error fetching appointments:", error);
       } finally {
-        if (mounted) {
+
           setLoading(false);
-        }
       }
     };
 
     fetchAppointments();
 
-    return () => {
-      mounted = false;
-    };
-  }, [
-    getAllAppointments,
-    getAppointmentsByID,
-    accessToken,
-    isAdmin,
-    userLoading,
-  ]);
+  }, [getAppointments, getAppointmentsByDoctor, accessToken, userLoading, currentUser]);
 
   const handleDeleteAppointment = async (appointmentId) => {
     try {
@@ -84,7 +67,6 @@ const AdminAppointments = () => {
           (appointment) => appointment.id !== appointmentId
         )
       );
-      toast.success("Appointment deleted successfully");
     } catch (error) {
       console.error("Failed to delete the appointment:", error);
       toast.error("Failed to delete appointment");
@@ -105,7 +87,7 @@ const AdminAppointments = () => {
             <div className="flex flex-row max-md:flex-col items-center gap-4 justify-between">
               <div className="flex flex-row max-md:flex-col items-center gap-4">
                 <img
-                  src={assets.profile} // Fixed typo in `docAvatar`
+                  src={assets.profile}
                   className="w-32 max-md:w-5/6"
                   alt="Doctor"
                 />
@@ -116,7 +98,7 @@ const AdminAppointments = () => {
                         Dr. {appointment.doctorName}
                       </p>
                       <p className="text-lg font-semibold ml-4 max-md:text-xl">
-                        Speciality: {appointment.specialtyName}
+                                        Speciality: {appointment.specialityName}
                       </p>
                     </>
                   }

@@ -150,72 +150,6 @@ const AppContextProvider = ({ children }) => {
     };
 
 
-
-
-
-    //// get doctor by id
-    //const getDoctorById = async (id) => {
-    //    const response = await apiDoctor.getDoctorById(id)
-    //    return response;
-    //}
-
-    //// get patient by id
-    //const getPatientById = async (id) => {
-    //    const response = await apiPatient.getPatientById(id)
-
-    //    return response;
-    //}
-
-    //// get appointment by id
-    //const getAppointmentById = async (id) => {
-
-    //        const response = await apiAppointment.getAppointmentById(id)
-    //        return response;
-    //}
-
-    //// get speciality by id
-    //const getSpecialityById = async (id) => {
-
-    //        const response = await apiSpeciality.getSpecialityById(id)
-    //        return response;
-
-    //}
-
-
-
-
-    //// get doctor by speciality
-    //const getDoctorBySpeciality = async (id) => {
-    //    await apiDoctor.getDoctorBySpeciality(id)
-    //        .then((response) => {
-    //            return response;
-    //        })
-    //        .catch((error) => {
-    //            console.log(error);
-    //        });
-    //}
-
-    //// get appointments by doctor
-    //const getAppointmentsByDoctor = async (id) => {
-    //    await apiAppointment.getAppointmentsByDoctor(id)
-    //        .then((response) => {
-    //            return response;
-    //        })
-    //        .catch((error) => {
-    //            console.log(error);
-    //        });
-    //}
-
-    //// get appointments by patient
-    //const getAppointmentsByPatient = async (id) => {
-    //    const response = await apiAppointment.getAppointmentsByPatient(id)
-    //    console.log("response", response);
-    //    return response;
-
-    //}
-
-
-
     // use memot on all the functions
     const contextValue = useMemo(() => ({
         setTokens,
@@ -228,6 +162,9 @@ const AppContextProvider = ({ children }) => {
         logout,
         getCurrentUser,
         getPatients,
+        getAppointments,
+        getDoctors,
+        getSpecialities,
         createPatient: apiPatient.createPatient,
         createDoctor: apiDoctor.createDoctor,
         createSpeciality: apiSpeciality.createSpeciality,
@@ -240,6 +177,7 @@ const AppContextProvider = ({ children }) => {
         deleteDoctor: apiDoctor.deleteDoctor,
         deleteAppointment: apiAppointment.deleteAppointment,
         deleteSpeciality: apiSpeciality.deleteSpeciality,
+        getAdminById: apiAdmin.getAdminById,
         getDoctorById: apiDoctor.getDoctorById,
         getPatientById: apiPatient.getPatientById,
         getAppointmentById: apiAppointment.getAppointmentById,

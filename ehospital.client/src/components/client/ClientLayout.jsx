@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import ClientNavBar from './ClientNavBar';  // Assuming you have an AdminNavBar component
+import ClientNavBar from './ClientNavBar';
 
 const ClientLayout = () => {
     return (

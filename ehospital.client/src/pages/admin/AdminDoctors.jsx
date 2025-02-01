@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
@@ -12,14 +13,15 @@ const Doctors = () => {
   const navigate = useNavigate();
 
   const {
-    doctors,
-    deleteUser,
+      doctors,
+    deleteDoctor,
     specialities,
-    createUser,
-    curUser,
-    updateUser,
+    createDoctor,
+    currentUser,
+    updateDoctor,
     accessToken,
-  } = useContext(AppContext);
+    } = useContext(AppContext);
+
   const [modalUser, setModalUser] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("view"); // view, edit, add
@@ -27,8 +29,7 @@ const Doctors = () => {
   const applyFilter = () => {
     if (speciality) {
       const filtered = doctors.filter((doc) => {
-          const specName = doc.specialization;
-        return specName === speciality;
+          return doc.specialization === speciality;
       });
       setFilteredDoctors(filtered);
     } else {
@@ -62,10 +63,10 @@ const Doctors = () => {
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
-    } else if (curUser) {
-      setIsAdmin(curUser.role === "admin");
+    } else if (currentUser) {
+        setIsAdmin(currentUser.role === "admin");
     }
-  }, [accessToken, curUser, navigate]);
+  }, [accessToken, currentUser, navigate]);
 
   return (
     <div className="p-6">
@@ -90,17 +91,17 @@ const Doctors = () => {
                 <Button
                   key={spec.id}
                   onClick={() =>
-                    speciality === spec.specialization
-                      ? navigate(`/doctors`)
-                      : navigate(`/doctors/${spec.specialization}`)
+                      speciality === spec.name
+                          ? navigate(`/doctors`)
+                          : navigate(`/doctors/${spec.name}`)
                   }
                   className={`w-full text-gray-700 text-left pl-3 py-2.5 pr-20 border border-gray-300 rounded transition-all cursor-pointer hover:bg-slate-200 ${
-                    speciality === spec.specialization
+                    speciality === spec.name
                       ? "bg-primary text-white hover:bg-secondary-1"
                       : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
-                  {spec.specialization}
+                      {spec.name}
                 </Button>
               ))}
             </div>
@@ -124,9 +125,9 @@ const Doctors = () => {
         onClose={() => setIsModalOpen(false)}
         doctor={modalUser}
         mode={modalMode}
-        onSave={updateUser}
-        onDelete={deleteUser}
-        onAdd={createUser}
+              onSave={updateDoctor}
+              onDelete={deleteDoctor}
+              onAdd={createDoctor}
       />
     </div>
   );

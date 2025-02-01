@@ -19,7 +19,7 @@ const Dashboard = () => {
         if (!accessToken) {
             navigate("/dashboard/login");
         } else if (currentUser) {
-            setIsAdmin(currentUser.role === "admin"); // Check if user is admin
+            setIsAdmin(currentUser.role === "admin");
         }
     }, [accessToken, currentUser, navigate]);
 
