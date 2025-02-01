@@ -4,13 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets_frontend/assets";
 import RelatedDoctors from "../../components/client/RelatedDoctors";
-
+import {toast } from "sonner"
 const ClientAppointments = () => {
     const { docId } = useParams();
     const {
         getDoctorById,
         createAppointment,
         currentUser,
+        accessToken
     } = useContext(AppContext);
     const [docInfo, setDocInfo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -37,6 +38,12 @@ const ClientAppointments = () => {
             console.log(currentUser, docId)
             console.error("Patient or doctor information is missing.");
             setLoading(false);
+            return;
+        }
+        if (!accessToken) {
+            toast.error("You need to login to book an appointment.");
+            setLoading(false);
+            navigate("/login");
             return;
         }
 

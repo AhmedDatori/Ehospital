@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../context/AppContext";
-import { Button, Select, Option } from "@material-tailwind/react";
-import { toast } from "sonner";
-import { assets } from "../../assets/assets_frontend/assets";
+import { Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
 const DoctorModal = ({
@@ -16,7 +16,7 @@ const DoctorModal = ({
 }) => {
   const [formData, setFormData] = useState(doctor || {});
   const [isEditing, setIsEditing] = useState(mode === "add" || mode === "edit");
-  const { specialities, accessToken, curUser } = useContext(AppContext);
+    const { specialities, accessToken, currentUser } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -45,10 +45,10 @@ const DoctorModal = ({
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
-    } else if (curUser) {
-      setIsAdmin(curUser.role === "admin"); // Check if user is admin
+    } else if (currentUser) {
+        setIsAdmin(currentUser.role === "admin"); // Check if user is admin
     }
-  }, [accessToken, curUser, navigate]);
+  }, [accessToken, currentUser, navigate]);
 
   return isOpen ? (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">

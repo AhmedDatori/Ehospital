@@ -1,21 +1,23 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { assets } from "../../assets/assets_frontend/assets";
 import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
-function Doctor({ doctor, specName, onView, onEdit }) {
+function Doctor({ doctor, onView, onEdit }) {
   const navigate = useNavigate();
-  const { accessToken, curUser } = useContext(AppContext);
+    const { accessToken, currentUser } = useContext(AppContext);
 
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
-    } else if (curUser) {
-      setIsAdmin(curUser.role === "admin"); // Check if user is admin
+    } else if (currentUser) {
+        setIsAdmin(currentUser.role === "admin"); // Check if user is admin
     }
-  }, [accessToken, curUser, navigate]);
+  }, [accessToken, currentUser, navigate]);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -28,7 +30,7 @@ function Doctor({ doctor, specName, onView, onEdit }) {
         <h3 className="text-xl font-semibold text-gray-800">
           Dr. {doctor.firstName} {doctor.lastName}
         </h3>
-        <p className="text-sm text-gray-600">{specName}</p>
+              <p className="text-sm text-gray-600">{doctor.specialization}</p>
         <div className="mt-4 flex gap-2">
           <Button
             onClick={onView}

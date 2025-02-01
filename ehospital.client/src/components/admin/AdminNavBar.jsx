@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React,{
     useContext,
     useEffect,
@@ -22,12 +23,12 @@ function AdminNavBar() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
     const {
+        setTokens,
+        accessToken,
+        currentUser,
+        logout,
         resetTokens,
         getCurrentUser,
-        accessToken,
-        curUser,
-        setAccessToken,
-        setCurUser,
         fetchUserById,
     } = useContext(AppContext);
 
@@ -35,11 +36,11 @@ function AdminNavBar() {
     useEffect(() => {
         if (!accessToken) {
             navigate("/Dashboard/login"); // Redirect to login if no access token
-        } else if (curUser) {
-            setIsAdmin(curUser.role === "admin"); // Check if user is admin
-            if (curUser.role === "patients") navigate("/");
+        } else if (currentUser) {
+            setIsAdmin(currentUser.role === "admin"); // Check if user is admin
+            if (currentUser.role === "patients") navigate("/");
         }
-    }, [accessToken, curUser, navigate]);
+    }, [accessToken, currentUser, navigate]);
 
     // Memoize user data
     const user = useMemo(
@@ -54,13 +55,7 @@ function AdminNavBar() {
     // Handle storage changes (e.g., token updates)
     useEffect(() => {
         const handleStorageChange = () => {
-            resetTokens(
-                localStorage.getItem("accessToken"),
-                localStorage.getItem("refreshToken"),
-                setAccessToken,
-                setCurUser,
-                fetchUserById
-            );
+            setTokens();
         };
 
         window.addEventListener("storage", handleStorageChange);
@@ -68,12 +63,12 @@ function AdminNavBar() {
         return () => {
             window.removeEventListener("storage", handleStorageChange);
         };
-    }, [resetTokens, setAccessToken, setCurUser, fetchUserById]);
+    }, [setTokens, fetchUserById]);
 
     // Load user data when accessToken or curUser changes
     useEffect(() => {
         const loadUserData = async () => {
-            if (accessToken && curUser) {
+            if (accessToken && currentUser) {
                 try {
                     const userData = await getCurrentUser();
                     if (userData) {
@@ -86,7 +81,7 @@ function AdminNavBar() {
         };
 
         loadUserData();
-    }, [accessToken, curUser, getCurrentUser]);
+    }, [accessToken, currentUser, getCurrentUser]);
 
     const navigation = [
         { name: "Dashboard", href: "/Dashboard/" },
@@ -161,7 +156,7 @@ function AdminNavBar() {
                                                                 className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                                                                 onClick={() => {
                                                                     if (item.name == "Sign out") {
-                                                                        localStorage.clear();
+                                                                        logout();
                                                                         navigate("/dashboard/login");
                                                                     }
                                                                 }}
@@ -240,7 +235,7 @@ function AdminNavBar() {
                                                 as="a"
                                                 onClick={() => {
                                                     if (item.name == "Sign out") {
-                                                        localStorage.clear();
+                                                        logout();
                                                         navigate("/Dashboard/login");
                                                     }
                                                 }}

@@ -1,71 +1,63 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets_frontend/assets";
 
-const Patients = () => {
+const AdminPatients = () => {
   const {
-    fetchPatients,
-    getDoctorPatients,
+      getPatientsByDoctor,
     accessToken,
-    curUser,
-    getCurrentUser,
+      currentUser,
+      getCurrentUser,
+      getPatients,
   } = useContext(AppContext);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userLoading, setUserLoading] = useState(true);
+    const [userLoading, setUserLoading] = useState(true);
   const navigate = useNavigate();
 
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!accessToken) {
-      navigate("/login");
-    } else if (!curUser) {
+      navigate("/dashboard/login");
+    } else if (!currentUser) {
       getCurrentUser().finally(() => setUserLoading(false));
     } else {
       setUserLoading(false);
     }
-  }, [accessToken, curUser, navigate]);
+  }, [accessToken, currentUser, navigate]);
 
-  useEffect(() => {
-    if (curUser) {
-      // console.log("curUser", curUser);
-      setIsAdmin(curUser.role == "admin");
-      // console.log("isAdmin", isAdmin);
-    }
-  }, [curUser]);
 
-  let mounted = true;
-
-  useEffect(() => {
-    const loadPatients = async () => {
-      if (!mounted) return;
-      if (!accessToken || userLoading) return;
-
-      try {
-        var patientsData;
-        if (curUser && isAdmin) {
-          patientsData = await fetchPatients(); // Fetch all patients for admin
-        } else if (curUser) {
-          patientsData = await getDoctorPatients(curUser.id); // Fetch patients for a specific doctor
+    useEffect(() => {
+        if (patients.length != 0) {
+            return;
         }
-        if (mounted) {
-          setPatients(patientsData || []);
-        }
-      } catch (error) {
-        console.error("Error fetching patients:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        const loadPatients = async () => {
+            if (!accessToken || userLoading) return;
 
-    loadPatients();
+            try {
+                var patientsData;
+                if (currentUser) {
+                    if (currentUser.role === "admin") {
+                        patientsData = await getPatients();
 
-    return () => {
-      mounted = false;
-    };
-  }, [fetchPatients, getDoctorPatients, accessToken, isAdmin, userLoading]);
+                    } else if (currentUser.role === "doctor") {
+                        patientsData = await getPatientsByDoctor(currentUser.id);
+                    }
+                }
+                    setPatients(patientsData || []);
+            } catch (error) {
+                console.error("Error fetching patients:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadPatients();
+
+    }, [getPatients, getPatientsByDoctor, accessToken, userLoading, currentUser, patients]);
+
 
   // Show loading message while fetching data
   if (loading) {
@@ -88,7 +80,7 @@ const Patients = () => {
             <li
               key={person.id}
               className="hover:bg-primary hover:text-white cursor-pointer p-4 rounded-lg"
-              onClick={() => navigate(`/patient/${person.id}`)}
+              onClick={() => navigate(`/dashboard/patient/${person.id}`)}
             >
               <div className="flex items-center gap-x-6">
                 <img
@@ -113,4 +105,4 @@ const Patients = () => {
   );
 };
 
-export default Patients;
+export default AdminPatients;

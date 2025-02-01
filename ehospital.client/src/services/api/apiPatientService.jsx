@@ -17,7 +17,6 @@ export const getPatients = async (page, size) => {
 
 export const getPatientById = async (patientId) => {
     if (!patientId) return;
-    if (!patientId) return;
     try {
     const response = await axios.get(apiConfig.PATIENTS_URL + "/" + patientId)
     return response.data;
@@ -55,6 +54,19 @@ export const deletePatient = async (patientId) => {
     try {
         const response = await axios.delete(apiConfig.PATIENTS_URL + "/" + patientId)
         toast.success("Patient Account deleted successfully");
+        return response.data;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+// get patients by doctorID
+
+export const getPatientsByDoctor = async (doctorId) => {
+    if (!doctorId) return;
+    try {
+        const response = await axios.get(apiConfig.PATIENTS_URL + "/doctor/" + doctorId)
         return response.data;
     } catch (err) {
         console.log(err);

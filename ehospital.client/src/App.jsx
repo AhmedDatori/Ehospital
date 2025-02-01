@@ -19,6 +19,7 @@ import AdminDoctors from "./pages/admin/AdminDoctors";
 import AdminMyProfile from "./pages/admin/AdminMyProfile";
 import AdminSpecializations from "./pages/admin/AdminSpecializations";
 import AdminPatient from "./pages/admin/AdminPatient";
+import AdminPatients from "./pages/admin/AdminPatients";
 
 
 // axios config
@@ -37,7 +38,7 @@ function App() {
                     <Route path="/dashboard/my-profile" element={<AdminMyProfile />} />
                     <Route path="/dashboard/Doctors" element={<AdminDoctors />} />
                     <Route path="/dashboard/Doctors/:speciality" element={<AdminDoctors />} />
-                    <Route path="/dashboard/Patients" element={<AdminPatient />} />
+                    <Route path="/dashboard/Patients" element={<AdminPatients />} />
                     <Route path="/dashboard/Patient/:patientID" element={<AdminPatient />} />
                     <Route path="/dashboard/Specialization" element={<AdminSpecializations />} />
                 </Route>

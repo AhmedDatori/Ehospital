@@ -24,7 +24,8 @@ const AppContextProvider = ({ children }) => {
     const [appointments, setAppointments] = useState([]);
     const [currentUser, setCurrentUser] = useState({});
     const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
-    const [isDataFetched, setIsDataFetched] = useState(false);  // Flag to prevent re-running
+    const [isGeneralDataFetched, setIsGeneralDataFetched] = useState(false);
+    const [isPrivateDataFetched, setIsPrivateDataFetched] = useState(false);
 
 
     useEffect(() => {
@@ -37,7 +38,7 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         const initialize = async () => {
-            if (!isDataFetched) {  // Check if data has already been fetched
+            if (!isGeneralDataFetched) {
                 await setTokens();
                 await getCurrentUser();
                 await getDoctors();
@@ -48,11 +49,24 @@ const AppContextProvider = ({ children }) => {
                 //console.log("Specialities: ", specialities);
                 //console.log("Doctors: ", doctors);
 
-                setIsDataFetched(true); // Set the flag to true to prevent further fetching
+                setIsGeneralDataFetched(true);
+            } else if (!isPrivateDataFetched) {
+                if (currentUser) {
+                    if (currentUser.role === "admin") {
+                        await getPatients();
+                        await getAppointments();
+                    }
+                    if (currentUser.role === "doctor") {
+                        await getAppointmentsByDoctor(currentUser.id);
+                        await getPatientsByDoctor(currentUser.id);
+                    }
+
+                    setIsPrivateDataFetched(true)
+                }
             }
         };
         initialize();
-    }, [isDataFetched, accessToken, currentUser, doctors, specialities]);  // Add `isDataFetched` in dependencies to prevent infinite loop
+    }, [isGeneralDataFetched, accessToken, currentUser, doctors, specialities, appointments, patients]);
 
 
     const setTokens = () => {
@@ -63,19 +77,14 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
-    //useEffect(() => {
-    //    console.log("specialities updated", specialities)
-    //}, [specialities]);
-
     // get all data
     const getSpecialities = async () => {
         // get specialities
         const specialitiesData = await apiSpeciality.getSpecialities()
         if (specialitiesData) {
             if (specialitiesData != specialities) {
-                //console.log("Specialities Data", specialitiesData);
                 setSpecialities(specialitiesData);
-                //console.log("Specialities Data", specialities);
+                return specialitiesData;
             }
         }
     };
@@ -85,32 +94,32 @@ const AppContextProvider = ({ children }) => {
         const doctorsData = await apiDoctor.getDoctors()
         if (doctorsData) {
             if (doctorsData != doctors) {
-                //console.log("doctors Data", doctorsData);
                 setDoctors(doctorsData);
+                return doctorsData;
             }
         }
     }
 
     const getPatients = async () => {
         // get patients
-        await apiPatient.getPatients()
-            .then((response) => {
-                setPatients(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const patientsData = await apiPatient.getPatients()
+        if (patientsData) {
+            if (patientsData != patients) {
+                setPatients(patientsData);
+                return patientsData;
+            }
+        }
     }
 
     const getAppointments = async () => {
         // get appointments
-        await apiAppointment.getAppointments()
-            .then((response) => {
-                setAppointments(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const appointmentsData = await apiAppointment.getAppointments()
+        if (appointmentsData) {
+            if (appointmentsData != appointments) {
+                setAppointments(appointmentsData);
+                return appointmentsData;
+            }
+        }
     }
 
     //login
@@ -140,87 +149,6 @@ const AppContextProvider = ({ children }) => {
             })
     };
 
-
-
-
-    ////create new patient
-    //const createPatient = async (data) => {
-    //    const response = await apiPatient.createPatient(data)
-    //    return response;
-    //};
-
-    ////create new doctor
-    //const createDoctor = async (data) => {
-    //    const response = await apiDoctor.createDoctor(data)
-    //    return response;
-    //};
-
-    ////create new speciality
-    //const createSpeciality = async (data) => {
-    //    const response = await apiSpeciality.createSpeciality(data)
-    //    return response;
-    //};
-
-    ////create new appointment
-    //const createAppointment = async (data) => {
-    //    const response = await apiAppointment.createAppointment(data)
-    //    return response;
-    //};
-
-
-
-
-    ////update patient
-    //const updatePatient = async (data) => {
-    //    console.log("data to update", data);
-    //    const response = await apiPatient.updatePatient(data)
-    //    return response;
-    //};
-
-    ////update doctor
-    //const updateDoctor = async (data) => {
-    //    const response = await apiDoctor.updateDoctor(data)
-    //    return response;
-    //};
-
-    ////update admin
-    //const updateAdmin = async (data) => {
-    //    const response = await apiAdmin.updateAdmin(data)
-    //    return response;
-    //};
-
-    ////update speciality
-    //const updateSpeciality = async (data) => {
-    //    const response = await apiSpeciality.updateSpeciality(data)
-    //    return response;
-    //};
-
-
-
-
-    //// delete patient
-    //const deletePatient = async (id) => {
-    //    const response = await apiPatient.deletePatient(id)
-    //    return response;
-    //};
-
-    //// delete doctor
-    //const deleteDoctor = async (id) => {
-    //    const response = await apiDoctor.deleteDoctor(id)
-    //    return response;
-    //};
-
-    //// delete appointment
-    //const deleteAppointment = async (id) => {
-    //    const response = await apiAppointment.deleteAppointment(id)
-    //    return response;
-    //};
-
-    //// delete speciality
-    //const deleteSpeciality = async (id) => {
-    //    const response = await apiSpeciality.deleteSpeciality(id)
-    //    return response;
-    //};
 
 
 
@@ -286,8 +214,8 @@ const AppContextProvider = ({ children }) => {
 
     //}
 
-    
-    
+
+
     // use memot on all the functions
     const contextValue = useMemo(() => ({
         setTokens,
@@ -299,6 +227,7 @@ const AppContextProvider = ({ children }) => {
         login,
         logout,
         getCurrentUser,
+        getPatients,
         createPatient: apiPatient.createPatient,
         createDoctor: apiDoctor.createDoctor,
         createSpeciality: apiSpeciality.createSpeciality,
@@ -318,6 +247,7 @@ const AppContextProvider = ({ children }) => {
         getDoctorBySpeciality: apiDoctor.getDoctorsBySpeciality,
         getAppointmentsByDoctor: apiAppointment.getAppointmentsByDoctor,
         getAppointmentsByPatient: apiAppointment.getAppointmentsByPatient,
+        getPatientsByDoctor: apiPatient.getPatientsByDoctor,
         accessToken,
         setAccessToken,
     }), [specialities, doctors, patients, appointments, currentUser, accessToken]);

@@ -8,10 +8,10 @@ const AdminPatient = () => {
   const { patientID } = useParams();
   const navigate = useNavigate();
   const {
-    getPatient,
-    getAppointmentsByID,
+      getPatientById,
+      getAppointmentsByPatient,
     deleteAppointment,
-    deleteUser,
+    deletePatient,
     accessToken,
   } = useContext(AppContext);
 
@@ -23,7 +23,7 @@ const AdminPatient = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        var patientData = await getPatient(patientID);
+          var patientData = await getPatientById(patientID);
 
         if (patientData) {
           setPatient(patientData);
@@ -36,30 +36,27 @@ const AdminPatient = () => {
     };
 
     fetchPatientData();
-  }, [getPatient, patientID]);
+  }, [getPatientById, patientID]);
 
   // Fetch the appointments for a specific patient
   useEffect(() => {
     const fetchAppointmentsData = async () => {
-      if (accessToken && patient?.userID) {
+      if (accessToken && patient) {
         try {
-          const appointmentsData = await getAppointmentsByID(
-            patientID,
-            "patient"
-          );
-          if (Array.isArray(appointmentsData)) {
-            setAppointments(appointmentsData);
-          }
+            const appointmentsData = await getAppointmentsByPatient(patientID);
+
+            setAppointments(appointmentsData || []);
+
         } catch (error) {
           console.error("Error fetching appointments:", error);
         }
       }
     };
 
-    if (patient?.userID) {
+    if (patient) {
       fetchAppointmentsData();
     }
-  }, [accessToken, getAppointmentsByID, patient?.userID]);
+  }, [accessToken, getAppointmentsByPatient, patient, patientID]);
 
   // Handle deleting appointment
   const handleDeleteAppointment = async (appointmentId) => {
@@ -80,7 +77,7 @@ const AdminPatient = () => {
   // Handle dleting patient
   const handleDeletePatient = async () => {
     try {
-      await deleteUser(patientID, "patient");
+        await deletePatient(patientID, "patient");
       toast.success("Patient deleted successfully");
       navigate("/patients");
     } catch (error) {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -8,7 +9,9 @@ import { assets } from "../../assets/assets_frontend/assets";
 
 const AdminLogin = () => {
   const [isAdmin, setIsAdmin] = useState(true);
-  const { BASE_URL, accessToken, setAccessToken, setCurUser, fetchUserById } =
+    const { accessToken,
+        login,
+        getCurrentUser } =
     useContext(AppContext);
   const [loginFormData, setLoginFormData] = useState({
     email: "",
@@ -35,23 +38,11 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { ...loginFormData, role: isAdmin ? "admin" : "doctor" };
-    const url = `${BASE_URL}/api/Auth/login`;
-
-    try {
-      const response = await axios.post(url, formData);
-      resetTokens(
-        response.data.accessToken,
-        response.data.refreshToken,
-        setAccessToken,
-        setCurUser,
-        fetchUserById
-      );
-      toast.success("Logged in successfully");
-      navigate("/Dashboard");
-    } catch (error) {
-      toast.error("Email or password is incorrect");
-      console.error(error);
-    }
+      const response = await login(formData);
+      await getCurrentUser();
+      if (response) {
+          navigate("/Dashboard");
+      }
   };
 
   return (
