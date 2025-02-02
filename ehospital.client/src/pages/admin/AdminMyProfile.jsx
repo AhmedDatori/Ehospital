@@ -26,16 +26,17 @@ const MyProfile = () => {
             if (userData && !userDataFetched) {
                 console.log(userData)
                 setUserDataFetched(true);
-            setUser({
-              id: userData.id,
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              email: userData.email,
-              password: userData.password,
-              birthdate: userData.birthdate,
-              registerDate: userData.registerDate,
-            });
-          }
+                setUser(prevUser => ({
+                    ...prevUser,
+                    id: userData.id,
+                    firstName: userData.firstName || "",
+                    lastName: userData.lastName || "",
+                    specialization: userData.specialization || "",
+                    email: userData.email || "",
+                    password: userData.password || "",
+                    birthdate: userData.birthdate || "",
+                }));
+            }
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -73,7 +74,7 @@ const MyProfile = () => {
             console.log("user",user)
             updatedUser = await updateDoctor(user);
         } else if (currentUser.role === "admin") {
-            console.log("user",user)
+            //console.log("user",user)
             updatedUser = await updateAdmin(user)
         }
       setUser(updatedUser);

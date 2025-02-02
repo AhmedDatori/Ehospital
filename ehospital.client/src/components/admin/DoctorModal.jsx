@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../context/AppContext";
-import { Button } from "@material-tailwind/react";
+//import { Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
 const DoctorModal = ({
@@ -33,9 +33,9 @@ const DoctorModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (mode === "add") {
-      onAdd(formData, "doctor");
+      onAdd(formData);
     } else if (isEditing) {
-      onSave(formData.id, "doctor", formData);
+      onSave(formData);
     }
     setIsEditing(false);
     onClose();
@@ -56,13 +56,13 @@ const DoctorModal = ({
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
             {mode === "add" ? "Add Doctor" : "Doctor Details"}
-          </h2>
-          <Button
+                  </h2>
+                  <button
             onClick={onClose}
             className="bg-red-500 hover:bg-red-700 text-white rounded-md mt-4 p-3 w-24 "
           >
             Close
-          </Button>
+          </button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -83,16 +83,16 @@ const DoctorModal = ({
               className="p-2 border border-primary rounded-md"
             />
             <select
-              name="specializationID"
-              value={formData.specializationID || ""}
+                          name="specialization"
+                          value={formData.specialization || ""}
               onChange={handleInputChange}
               disabled={mode === "view" && !isEditing}
               className="p-2 border border-primary rounded-md"
             >
               <option value="">Select Specialization</option>
               {specialities.map((spec) => (
-                <option key={spec.id} value={spec.id}>
-                  {spec.specialization}
+                  <option key={spec.id} value={spec.name}>
+                  {spec.name}
                 </option>
               ))}
             </select>
@@ -136,36 +136,36 @@ const DoctorModal = ({
           {isAdmin && (
             <div className="flex gap-2">
               {mode === "add" && (
-                <Button
+                              <button
                   type="submit"
                   className="bg-green-500 hover:bg-green-700 text-white rounded-md mt-4 p-2 w-32"
                 >
                   Add
-                </Button>
+                </button>
               )}
               {mode === "view" && !isEditing && (
                 <>
-                  <Button
+                                  <button
                     onClick={() => setIsEditing(true)}
                     className="bg-primary hover:bg-secondary-1 text-white rounded-md mt-4 p-2 w-32"
                   >
                     Edit
-                  </Button>
-                  <Button
-                    onClick={() => onDelete(doctor.id, "doctor")}
+                  </button>
+                                  <button
+                    onClick={() => onDelete(doctor.id)}
                     className="bg-red-500 hover:bg-red-700 text-white rounded-md mt-4 p-3 w-32 "
                   >
                     Delete
-                  </Button>
+                  </button>
                 </>
               )}
               {(mode === "view" || mode === "edit") && isEditing && (
-                <Button
+                              <button
                   type="submit"
                   className="bg-primary hover:bg-secondary-1 text-white rounded-md mt-4 p-2 w-32"
                 >
                   Save
-                </Button>
+                </button>
               )}
             </div>
           )}

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
-import { Button } from "@material-tailwind/react";
+//import { Button } from "@material-tailwind/react";
 import { assets } from "../../assets/assets_frontend/assets";
 import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -32,19 +32,19 @@ function Doctor({ doctor, onView, onEdit }) {
         </h3>
               <p className="text-sm text-gray-600">{doctor.specialization}</p>
         <div className="mt-4 flex gap-2">
-          <Button
+                  <button
             onClick={onView}
             className="bg-primary hover:bg-secondary-1 text-white rounded-md mt-4 p-2 w-full"
           >
             View
-          </Button>
+          </button>
           {isAdmin && (
-            <Button
+                      <button
               onClick={onEdit}
               className="bg-gray-500 hover:bg-gray-700  text-white rounded-md mt-4 p-2 w-full"
             >
               Edit
-            </Button>
+            </button>
           )}
         </div>
       </div>

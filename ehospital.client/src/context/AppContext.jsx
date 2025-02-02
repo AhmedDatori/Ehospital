@@ -15,7 +15,44 @@ import * as apiSpeciality from "../services/api/apiSpecialityService";
 
 
 
-export const AppContext = createContext();
+export const AppContext = createContext({
+    doctors: [],
+    specialities: [],
+    patients: [],
+    appointments: [],
+    currentUser: {},
+    accessToken: "",
+    setTokens: () => { },
+    login: () => { },
+    logout: () => { },
+    getCurrentUser: () => { },
+    getDoctors: () => { },
+    getSpecialities: () => { },
+    getPatients: () => { },
+    getAppointments: () => { },
+    createPatient: () => { },
+    createDoctor: () => { },
+    createSpeciality: () => { },
+    createAppointment: () => { },
+    updatePatient: () => { },
+    updateDoctor: () => { },
+    updateAdmin: () => { },
+    updateSpeciality: () => { },
+    deletePatient: () => { },
+    deleteDoctor: () => { },
+    deleteAppointment: () => { },
+    deleteSpeciality: () => { },
+    getAdminById: () => { },
+    getDoctorById: () => { },
+    getPatientById: () => { },
+    getAppointmentById: () => { },
+    getSpecialityById: () => { },
+    getDoctorBySpeciality: () => { },
+    getAppointmentsByDoctor: () => { },
+    getAppointmentsByPatient: () => { },
+    getPatientsByDoctor: () => { },
+    setAccessToken: () => { },
+});
 
 const AppContextProvider = ({ children }) => {
     const [specialities, setSpecialities] = useState([]);
