@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
     const [user, setUser] = useState({});
-    const { accessToken, currentUser, getDoctorById, getAdminById, updateDoctor, deleteDoctor, updateAdmin, deleteUser,deleteAdmin } =
+    const { accessToken, currentUser, getDoctorById, getAdminById, updateDoctor, deleteDoctor, updateAdmin,deleteAdmin } =
         useContext(AppContext);
     const [userDataFetched, setUserDataFetched] = useState(false);
   const navigate = useNavigate();
@@ -70,6 +70,7 @@ const MyProfile = () => {
     try {
         var updatedUser;
         if (currentUser.role === "doctor") {
+            console.log("user",user)
             updatedUser = await updateDoctor(user);
         } else if (currentUser.role === "admin") {
             console.log("user",user)

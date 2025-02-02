@@ -111,9 +111,31 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
+    const getPatientsByDoctor = async (doctorId) => {
+        // get patients
+        const patientsData = await apiPatient.getPatientsByDoctor(doctorId)
+        if (patientsData) {
+            if (patientsData != patients) {
+                setPatients(patientsData);
+                return patientsData;
+            }
+        }
+    }
+
     const getAppointments = async () => {
         // get appointments
         const appointmentsData = await apiAppointment.getAppointments()
+        if (appointmentsData) {
+            if (appointmentsData != appointments) {
+                setAppointments(appointmentsData);
+                return appointmentsData;
+            }
+        }
+    }
+
+    const getAppointmentsByDoctor = async () => {
+        // get appointments
+        const appointmentsData = await apiAppointment.getAppointmentsByDoctor(currentUser.id)
         if (appointmentsData) {
             if (appointmentsData != appointments) {
                 setAppointments(appointmentsData);
@@ -183,9 +205,9 @@ const AppContextProvider = ({ children }) => {
         getAppointmentById: apiAppointment.getAppointmentById,
         getSpecialityById: apiSpeciality.getSpecialityById,
         getDoctorBySpeciality: apiDoctor.getDoctorsBySpeciality,
-        getAppointmentsByDoctor: apiAppointment.getAppointmentsByDoctor,
+        getAppointmentsByDoctor,
         getAppointmentsByPatient: apiAppointment.getAppointmentsByPatient,
-        getPatientsByDoctor: apiPatient.getPatientsByDoctor,
+        getPatientsByDoctor,
         accessToken,
         setAccessToken,
     }), [specialities, doctors, patients, appointments, currentUser, accessToken]);

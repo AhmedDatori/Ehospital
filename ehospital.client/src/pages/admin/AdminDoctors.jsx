@@ -6,7 +6,7 @@ import Doctor from "../../components/admin/Doctor";
 import DoctorModal from "../../components/admin/DoctorModal";
 import { Button } from "@material-tailwind/react";
 
-const Doctors = () => {
+const AdminDoctors = () => {
   const { speciality } = useParams();
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [showFilter, setShowFilter] = useState(true);
@@ -133,4 +133,4 @@ const Doctors = () => {
   );
 };
 
-export default Doctors;
+export default AdminDoctors;

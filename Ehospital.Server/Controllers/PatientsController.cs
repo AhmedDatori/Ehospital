@@ -272,5 +272,47 @@ namespace Ehospital.Server.Controllers
             return Ok(patientToDelete);
         }
 
+
+        // get Patients By Doctor ID
+        [Authorize(Roles ="admin,doctor")]
+        [HttpGet("doctor/{doctorID}")]
+        public async Task<ActionResult> GetPatientsByDoctorID(Guid doctorID)
+        {
+            var currentUserRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            var currentUserID = HttpContext.User.FindFirstValue("userID");
+            
+            // Redis cache
+            var cacheKey = $"patients_doctorID_{doctorID}";
+            var patients = cache.GetData<List<PatientDto>>(cacheKey);
+            if (patients == null)
+            {
+                patients = await context.Patients
+                    .Join(context.Appointments,
+                        p => p.Id,
+                        a => a.PatientID,
+                        (p, a) => new { p, a })
+                    .Where(pa => pa.a.DoctorID == doctorID)
+                    .Join(context.Users,
+                        pa => pa.p.UserID,
+                        u => u.Id,
+                        (pa, u) => new PatientDto
+                        {
+                            Id = pa.p.Id,
+                            FirstName = pa.p.FirstName,
+                            LastName = pa.p.LastName,
+                            Email = u.Email,
+                            Password = null,
+                            RegisterDate = pa.p.RegisterDate,
+                            Birthdate = pa.p.Birthdate
+                        })
+                    .ToListAsync();
+                if (patients == null)
+                {
+                    return NotFound("Patients not found.");
+                }
+                cache.SetData(cacheKey, patients);
+            }
+            return Ok(patients);
+        }
     }
 }
